@@ -11,7 +11,7 @@ export APPLE_SIGNING_IDENTITY="${APPLE_SIGNING_IDENTITY:-Developer ID Applicatio
 bun run --bun tauri build --bundles app,dmg
 
 app=src-tauri/target/release/bundle/macos/NoVul.app
-dmg=$(ls -t src-tauri/target/release/bundle/dmg/*.dmg | head -1)
+dmg=$(ls -t src-tauri/target/release/bundle/dmg/NoVul_*.dmg | head -1)
 
 # Every executable must carry the Developer ID signature with hardened runtime.
 for bin in "$app"/Contents/MacOS/*; do
@@ -28,5 +28,12 @@ xcrun notarytool submit "$dmg" --keychain-profile "$PROFILE" --wait
 xcrun stapler staple "$dmg"
 spctl --assess --type open --context context:primary-signature --verbose "$dmg"
 
-echo "$PWD/$dmg"
-du -h "$dmg" | cut -f1
+# The README's download button points at releases/latest/download/NoVul-arm64.dmg, so every
+# release carries the DMG under that fixed name.
+version=$(jq -r .version src-tauri/tauri.conf.json)
+stable=src-tauri/target/release/bundle/dmg/NoVul-arm64.dmg
+cp "$dmg" "$stable"
+
+echo "$PWD/$stable ($(du -h "$stable" | cut -f1))"
+echo "Publish it with:"
+echo "  gh release create v$version \"$stable\" --title \"NoVul $version\" --generate-notes"

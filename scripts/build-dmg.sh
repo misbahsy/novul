@@ -8,6 +8,6 @@ bun run --bun scripts/render-dmg-bg.ts
 (cd design/dmg && tiffutil -cathidpicheck bg.png bg@2x.png -out background.tiff)
 bun run --bun tauri build --bundles dmg
 
-dmg=$(ls -t src-tauri/target/release/bundle/dmg/*.dmg | head -1)
+dmg=$(ls -t src-tauri/target/release/bundle/dmg/NoVul_*.dmg | head -1)
 echo "$PWD/$dmg"
 du -h "$dmg" | cut -f1

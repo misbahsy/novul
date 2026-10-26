@@ -2,6 +2,15 @@
 
 A menu bar app that keeps an eye on everything you've installed on your Mac and tells you what to fix.
 
+<p>
+  <a href="https://github.com/misbahsy/novul/releases/latest/download/NoVul-arm64.dmg"><img alt="Download for macOS" src="https://img.shields.io/badge/Download_for_macOS-Apple_Silicon-3ee6c4?style=for-the-badge&logo=apple&logoColor=white&labelColor=0e1220"></a>
+</p>
+<p>
+  <a href="https://github.com/misbahsy/novul/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/misbahsy/novul?label=release&color=3ee6c4"></a>
+  <img alt="macOS 13+ on Apple Silicon" src="https://img.shields.io/badge/macOS-13%2B_·_Apple_Silicon-555">
+  <a href="LICENSE"><img alt="License: Apache 2.0" src="https://img.shields.io/badge/license-Apache_2.0-555"></a>
+</p>
+
 NoVul finds the projects on your Mac and checks every locked dependency against public vulnerability
 data. It also covers your Homebrew packages, language runtimes, global packages and AI coding tools,
 and looks for API keys left in plain-text files. It checks again every 30 minutes and as soon as a
@@ -55,7 +64,9 @@ finding comes with the command that fixes it for that project's package manager.
 
 Requires a Mac with Apple Silicon and macOS 13 or later.
 
-1. Download `NoVul_<version>_aarch64.dmg` from [Releases](../../releases) and drag NoVul to Applications.
+1. [Download NoVul](https://github.com/misbahsy/novul/releases/latest/download/NoVul-arm64.dmg)
+   (or pick a version under [Releases](https://github.com/misbahsy/novul/releases)), open the DMG and
+   drag NoVul to Applications.
 2. Open it. NoVul asks where your code lives, suggests folders it found, and starts the first scan.
    Package results arrive in a minute or two; the check for exposed secrets runs right after.
 
