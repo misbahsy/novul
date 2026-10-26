@@ -301,9 +301,12 @@ export function headline(m: Model, ov: Overview | null): Headline {
 
 // ---------- copy output ----------
 
+/** POSIX single-quoting: folder names come from disk and may contain quotes or `$(...)`. */
+export const shq = (s: string) => `'${s.replace(/'/g, `'\\''`)}'`;
+
 /** Package fixes only make sense inside their project folder; prefix one unless the backend already did. */
 const runnable = (g: Fix, t: Target) =>
-  !t.command ? null : g.kind === "package" && !t.command.startsWith("cd ") ? `cd '${t.dir}' && ${t.command}` : t.command;
+  !t.command ? null : g.kind === "package" && !t.command.startsWith("cd ") ? `cd ${shq(t.dir)} && ${t.command}` : t.command;
 
 export function commandsFor(fixes: Fix[]): string {
   const out = new Set<string>();

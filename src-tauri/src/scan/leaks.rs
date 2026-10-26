@@ -436,11 +436,17 @@ fn nearest_repo(path: &Path) -> Option<PathBuf> {
     path.ancestors().skip(1).find(|d| d.join(".git").exists()).map(Path::to_path_buf)
 }
 
+/// Whether git tracks `file`. Scanned repos are untrusted: their own config could make git run a
+/// command (core.fsmonitor), so the command line overrides it and system/global config is ignored.
 async fn git_tracked(repo: &Path, file: &Path) -> bool {
     Command::new("/usr/bin/git")
         .arg("-C")
         .arg(repo)
+        .args(["-c", "core.fsmonitor=false", "-c", "core.hooksPath=/dev/null", "-c", "core.untrackedCache=false"])
         .args(["ls-files", "--error-unmatch", "--"])
+        .env("GIT_CONFIG_NOSYSTEM", "1")
+        .env("GIT_CONFIG_GLOBAL", "/dev/null")
+        .env("GIT_OPTIONAL_LOCKS", "0")
         .arg(file)
         .stdin(Stdio::null())
         .stdout(Stdio::null())
@@ -797,6 +803,31 @@ mod tests {
 
         let all: String = found.iter().map(dump).collect();
         assert!(!all.contains(AWS) && !all.contains(GH) && !all.contains("AKIA") && !all.contains("ghp_"));
+    }
+
+    #[tokio::test]
+    async fn a_scanned_repo_cannot_make_git_run_its_fsmonitor_command() {
+        let tmp = tempfile::tempdir().unwrap();
+        let repo = tmp.path().join("repo");
+        fs::create_dir_all(&repo).unwrap();
+        let marker = tmp.path().join("pwned");
+        let hook = tmp.path().join("hook.sh");
+        fs::write(&hook, format!("#!/bin/sh\ntouch '{}'\n", marker.display())).unwrap();
+        fs::set_permissions(&hook, fs::Permissions::from_mode(0o755)).unwrap();
+        let git = |args: &[&str]| std::process::Command::new("/usr/bin/git").arg("-C").arg(&repo).args(args).output().unwrap();
+        git(&["init", "-q"]);
+        fs::write(repo.join("a.txt"), "x").unwrap();
+        git(&["add", "a.txt"]);
+        git(&["config", "core.fsmonitor", hook.to_str().unwrap()]);
+
+        // plain git runs the repo's command, which is what makes this a real attack
+        git(&["ls-files", "--error-unmatch", "--", "a.txt"]);
+        let plain_ran = marker.exists();
+        let _ = fs::remove_file(&marker);
+
+        assert!(git_tracked(&repo, &repo.join("a.txt")).await);
+        assert!(!marker.exists(), "git_tracked ran the repo's fsmonitor command");
+        assert!(plain_ran, "test setup: this git should run core.fsmonitor when not overridden");
     }
 
     #[tokio::test]
