@@ -1,0 +1,12 @@
+node_modules/
+dist/
+src-tauri/target/
+# Downloaded by scripts/fetch-sidecars.sh, verified against sidecars/SHA256SUMS
+src-tauri/binaries/
+sidecars/download/
+.claude/
+.DS_Store
+# Internal planning notes
+PLAN.qmd
+# Unused stub, not part of the build (delete it)
+src-tauri/src/scan/secrets.rs

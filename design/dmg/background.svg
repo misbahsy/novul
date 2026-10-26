@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="660" height="420" viewBox="0 0 660 420" font-family="Avenir Next">
+  <defs>
+    <radialGradient id="vig" cx="330" cy="150" r="430" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#171e33"/><stop offset="0.55" stop-color="#0e1220"/><stop offset="1" stop-color="#090c17"/>
+    </radialGradient>
+    <radialGradient id="fade" cx="330" cy="140" r="250" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fff" stop-opacity="1"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
+    <mask id="ringmask"><rect width="660" height="420" fill="url(#fade)"/></mask>
+    <linearGradient id="sweep" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="26" y2="-26">
+      <stop offset="0" stop-color="#3ee6c4" stop-opacity="0"/><stop offset="1" stop-color="#3ee6c4" stop-opacity="0.6"/>
+    </linearGradient>
+    <filter id="glow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="2.2"/></filter>
+    <filter id="glowL" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="5"/></filter>
+  </defs>
+
+  <rect width="660" height="420" fill="url(#vig)"/>
+
+  <!-- faint radar behind the icons -->
+  <g mask="url(#ringmask)" fill="none" stroke="#3ee6c4" stroke-width="1">
+    <circle cx="330" cy="130" r="70" stroke-opacity="0.07"/>
+    <circle cx="330" cy="130" r="130" stroke-opacity="0.06"/>
+    <circle cx="330" cy="130" r="195" stroke-opacity="0.05"/>
+    <circle cx="330" cy="130" r="265" stroke-opacity="0.04"/>
+    <line x1="330" y1="130" x2="560" y2="22" stroke-opacity="0.10"/>
+  </g>
+  <circle cx="548" cy="44" r="2.2" fill="#3ee6c4" fill-opacity="0.55"/>
+  <circle cx="112" cy="58" r="1.8" fill="#3ee6c4" fill-opacity="0.4"/>
+  <circle cx="604" cy="196" r="1.8" fill="#ff9f5a" fill-opacity="0.5"/>
+
+  <!-- heading -->
+  <text x="330" y="36" text-anchor="middle" font-size="11" font-weight="500" letter-spacing="2.6" fill="#7d879e">WELCOME TO NOVUL</text>
+
+  <!-- arrow -->
+  <g fill="none" stroke="#3ee6c4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M262 136 C292 104, 346 98, 396 130" stroke-width="2.6" stroke-dasharray="7 8.5"/>
+    <path d="M388 140 L405 135 L395.5 120.5" stroke-width="2.8"/>
+  </g>
+  <text x="330" y="172" text-anchor="middle" font-size="14" font-weight="600" fill="#3ee6c4">Drag to Applications</text>
+
+  <!-- strip -->
+  <line x1="40" y1="256" x2="620" y2="256" stroke="#232b42" stroke-width="1"/>
+
+  <!-- step 1: menu bar -->
+  <g>
+    <rect x="42" y="274" width="136" height="18" rx="4" fill="#151b2d" stroke="#232b42"/>
+    <circle cx="52" cy="283" r="2.4" fill="#7d879e"/>
+    <rect x="60" y="281.5" width="14" height="3" rx="1.5" fill="#3a445e"/>
+    <rect x="78" y="281.5" width="10" height="3" rx="1.5" fill="#3a445e"/>
+    <rect x="130" y="281.5" width="9" height="3" rx="1.5" fill="#3a445e"/>
+    <rect x="156" y="281.5" width="15" height="3" rx="1.5" fill="#3a445e"/>
+    <rect x="141" y="276" width="13" height="14" rx="3" fill="#3ee6c4" fill-opacity="0.16"/>
+    <path d="M147.5 278.4 L151.6 279.9 V283.6 C151.6 286.3 149.9 287.7 147.5 288.6 C145.1 287.7 143.4 286.3 143.4 283.6 V279.9 Z" fill="none" stroke="#3ee6c4" stroke-width="1.5" stroke-linejoin="round"/>
+    <path d="M147.5 292 L143 296" stroke="#232b42" stroke-width="0"/>
+    <rect x="120" y="297" width="56" height="30" rx="5" fill="#151b2d" stroke="#232b42"/>
+    <rect x="127" y="304" width="30" height="3" rx="1.5" fill="#e8ecf6" fill-opacity="0.8"/>
+    <rect x="127" y="311" width="42" height="3" rx="1.5" fill="#3a445e"/>
+    <circle cx="165" cy="305.5" r="2.4" fill="#ff9f5a"/>
+    <rect x="127" y="318" width="24" height="3" rx="1.5" fill="#3a445e"/>
+  </g>
+
+  <!-- step 2: radar -->
+  <g transform="translate(330 306)">
+    <circle r="28" fill="#3ee6c4" fill-opacity="0.05"/>
+    <g fill="none" stroke="#3ee6c4" stroke-opacity="0.4" stroke-width="1">
+      <circle r="28"/><circle r="19"/><circle r="10"/>
+    </g>
+    <path d="M0 0 L28 0 A28 28 0 0 0 19.8 -19.8 Z" fill="url(#sweep)" transform="rotate(-8)"/>
+    <line x1="0" y1="0" x2="28" y2="0" stroke="#3ee6c4" stroke-width="1.4" stroke-linecap="round" transform="rotate(-53)"/>
+    <g filter="url(#glow)">
+      <circle cx="-14" cy="-13" r="3" fill="#3ee6c4"/><circle cx="16" cy="9" r="3" fill="#ff9f5a"/><circle cx="12" cy="-18" r="3.4" fill="#ff6b7d"/>
+    </g>
+    <circle cx="-14" cy="-13" r="2.2" fill="#3ee6c4"/><circle cx="16" cy="9" r="2.2" fill="#ff9f5a"/><circle cx="12" cy="-18" r="2.6" fill="#ff6b7d"/>
+    <circle cx="-8" cy="14" r="1.8" fill="#3ee6c4" fill-opacity="0.8"/>
+    <circle r="2" fill="#e8ecf6"/>
+  </g>
+
+  <!-- step 3: notification -->
+  <g>
+    <rect x="490" y="280" width="120" height="40" rx="9" fill="#151b2d" stroke="#232b42"/>
+    <rect x="499" y="289" width="22" height="22" rx="6" fill="#0e1220" stroke="#232b42"/>
+    <path d="M510 292.5 L516 294.8 V300.4 C516 304.3 513.6 306.2 510 307.6 C506.4 306.2 504 304.3 504 300.4 V294.8 Z" fill="none" stroke="#3ee6c4" stroke-width="1.6" stroke-linejoin="round"/>
+    <rect x="528" y="291" width="52" height="4" rx="2" fill="#e8ecf6" fill-opacity="0.85"/>
+    <rect x="528" y="299" width="68" height="3.5" rx="1.75" fill="#3a445e"/>
+    <rect x="528" y="306" width="40" height="3.5" rx="1.75" fill="#3a445e"/>
+    <circle cx="604" cy="282" r="5.5" fill="#ff6b7d" filter="url(#glow)" opacity="0.7"/>
+    <circle cx="604" cy="282" r="4.4" fill="#ff6b7d"/>
+  </g>
+
+  <!-- step text -->
+  <g font-size="12.5" font-weight="600" fill="#e8ecf6" text-anchor="middle">
+    <text x="110" y="352">Lives in your menu bar</text>
+    <text x="330" y="352">Scans every project,</text>
+    <text x="330" y="369">runtime &amp; Homebrew</text>
+    <text x="550" y="352">Speaks up only when it matters</text>
+  </g>
+  <g font-size="10.5" font-weight="400" fill="#7d879e" text-anchor="middle">
+    <text x="550" y="371">Only package names &amp; versions</text>
+    <text x="550" y="385">leave your Mac.</text>
+  </g>
+</svg>

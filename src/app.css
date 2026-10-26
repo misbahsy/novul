@@ -1,0 +1,89 @@
+:root {
+  --ink: #0e1220;
+  --panel: #151b2d;
+  --raised: #1b2338;
+  --hair: #232b42;
+  --line: #2f3957;
+  --text: #e8ecf6;
+  --muted: #7d879e;
+  --teal: #3ee6c4;
+  --teal-ink: #04221c;
+  --s-malicious: #c77dff;
+  --s-exploited: #ff3b5c;
+  --s-critical: #ff6b7d;
+  --s-high: #ff9f5a;
+  --s-medium: #f2cf5b;
+  --s-low: #8aa4c8;
+  --s-unrated: #5d6880;
+  --mono: ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+* { box-sizing: border-box; }
+html, body, #app { height: 100%; margin: 0; }
+body {
+  background-color: var(--ink);
+  background-image: radial-gradient(ellipse 90% 80% at 26% 48%, #131a2e 0%, #0e1220 55%, #0a0d18 100%);
+  background-attachment: fixed;
+  color: var(--text);
+  font: 13px/1.4 -apple-system, "SF Pro Text", system-ui, sans-serif;
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+  -webkit-user-select: none;
+  user-select: none;
+  overflow: hidden;
+  cursor: default;
+}
+button, input, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+button:disabled { cursor: default; }
+:focus-visible { outline: 2px solid var(--teal); outline-offset: 1px; }
+.mono, code { font-family: var(--mono); }
+.sel { -webkit-user-select: text; user-select: text; }
+.ok { color: var(--teal); }
+.muted { color: var(--muted); }
+
+.btn {
+  height: 28px; padding: 0 12px; border: 1px solid var(--line); border-radius: 7px;
+  background: var(--raised); color: var(--text); white-space: nowrap;
+}
+.btn:hover:not(:disabled) { border-color: #34405f; background: #212b45; }
+.btn:disabled { opacity: 0.5; }
+.btn.primary { background: var(--teal); border-color: var(--teal); color: var(--teal-ink); font-weight: 600; }
+.btn.primary:hover:not(:disabled) { background: #66f0d4; border-color: #66f0d4; }
+
+.link { background: none; border: 0; padding: 0; color: var(--teal); font-size: 12px; white-space: nowrap; }
+.link:hover { text-decoration: underline; }
+
+.chip {
+  display: inline-flex; align-items: center; height: 20px; padding: 0 8px; border-radius: 10px;
+  background: var(--raised); border: 1px solid var(--hair); color: var(--muted); font-size: 11px; white-space: nowrap;
+}
+.chip.epss { height: 18px; padding: 0 7px; font-size: 10.5px; color: var(--text); cursor: help; }
+.tag {
+  display: inline-flex; align-items: center; height: 18px; padding: 0 7px; border-radius: 9px;
+  font-size: 10.5px; font-weight: 600; white-space: nowrap;
+  background: color-mix(in srgb, var(--s-exploited) 18%, transparent); color: var(--s-exploited);
+}
+.score {
+  display: inline-flex; align-items: center; height: 18px; padding: 0 6px; border-radius: 9px; font-size: 11px;
+  font-family: var(--mono); border: 1px solid color-mix(in srgb, var(--c) 55%, transparent); color: var(--c);
+}
+.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; flex: none; background: var(--c); }
+.banner {
+  display: grid; gap: 1px; padding: 9px 12px; border-radius: 9px; font-size: 12px;
+  background: color-mix(in srgb, var(--s-malicious) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--s-malicious) 45%, transparent);
+}
+.banner b { color: var(--s-malicious); }
+
+.scroll { overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; }
+.scroll::-webkit-scrollbar { width: 8px; }
+.scroll::-webkit-scrollbar-thumb { background: var(--hair); border-radius: 4px; border: 2px solid transparent; background-clip: content-box; }
+.more { display: block; width: 100%; padding: 10px; border: 0; background: none; color: var(--teal); font-size: 12px; }
+.more:hover { text-decoration: underline; }
+.empty { padding: 48px 24px; text-align: center; color: var(--muted); }
+.empty b { display: block; color: var(--text); font-size: 14px; margin-bottom: 4px; }
+@keyframes rise { from { opacity: 0; transform: translateY(6px); } }
+@keyframes slide { from { transform: translateX(24px); opacity: 0; } }
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--line); border-top-color: var(--teal); animation: spin 0.8s linear infinite; flex: none; }

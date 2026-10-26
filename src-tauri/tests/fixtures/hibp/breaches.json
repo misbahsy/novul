@@ -1,0 +1,26 @@
+[
+ {
+  "Name": "Adobe",
+  "Title": "Adobe",
+  "Domain": "adobe.com",
+  "BreachDate": "2013-10-04",
+  "AddedDate": "2013-12-04T00:00:00Z",
+  "PwnCount": 152445165
+ },
+ {
+  "Name": "LinkedIn",
+  "Title": "LinkedIn",
+  "Domain": "linkedin.com",
+  "BreachDate": "2012-05-05",
+  "AddedDate": "2016-05-21T21:35:40Z",
+  "PwnCount": 164611595
+ },
+ {
+  "Name": "AssuranceRetraite",
+  "Title": "Assurance Retraite",
+  "Domain": "lassuranceretraite.fr",
+  "BreachDate": "2024-09-01",
+  "AddedDate": "2026-10-20T02:29:36Z",
+  "PwnCount": 70372
+ }
+]

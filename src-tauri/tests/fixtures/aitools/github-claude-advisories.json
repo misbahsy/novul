@@ -1,0 +1,2313 @@
+[
+ {
+  "ghsa_id": "GHSA-v234-4jrq-mgg6",
+  "cve_id": null,
+  "url": "https://api.github.com/repos/anthropics/claude-code/security-advisories/GHSA-v234-4jrq-mgg6",
+  "html_url": "https://github.com/anthropics/claude-code/security/advisories/GHSA-v234-4jrq-mgg6",
+  "summary": "Claude Desktop (macOS): opening a malicious file from a Cowork folder could run commands on the host",
+  "severity": "high",
+  "author": null,
+  "publisher": {
+   "login": "jenn-newton",
+   "id": 153535757,
+   "node_id": "U_kgDOCSbFDQ",
+   "avatar_url": "https://avatars.githubusercontent.com/u/153535757?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/jenn-newton",
+   "html_url": "https://github.com/jenn-newton",
+   "followers_url": "https://api.github.com/users/jenn-newton/followers",
+   "following_url": "https://api.github.com/users/jenn-newton/following{/other_user}",
+   "gists_url": "https://api.github.com/users/jenn-newton/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/jenn-newton/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/jenn-newton/subscriptions",
+   "organizations_url": "https://api.github.com/users/jenn-newton/orgs",
+   "repos_url": "https://api.github.com/users/jenn-newton/repos",
+   "events_url": "https://api.github.com/users/jenn-newton/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/jenn-newton/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2026-09-25T21:54:09Z",
+  "published_at": "2026-09-25T21:54:09Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "vulnerabilities": [
+   {
+    "package": {
+     "ecosystem": "other",
+     "name": "Claude Desktop"
+    },
+    "vulnerable_version_range": ">= 1.1.3918, < 1.15962.0",
+    "patched_versions": "1.15962.0",
+    "vulnerable_functions": []
+   }
+  ],
+  "cvss_severities": {
+   "cvss_v3": {
+    "vector_string": null,
+    "score": null
+   },
+   "cvss_v4": {
+    "vector_string": "CVSS:4.0/AV:L/AC:L/AT:N/PR:N/UI:P/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N",
+    "score": 8.5
+   }
+  },
+  "cwe_ids": [
+   "CWE-184"
+  ],
+  "comments": 0,
+  "cvss": {
+   "vector_string": null,
+   "score": null
+  }
+ },
+ {
+  "ghsa_id": "GHSA-gfvf-j8jh-jxxw",
+  "cve_id": "CVE-2026-103012",
+  "url": "https://api.github.com/repos/anthropics/claude-code/security-advisories/GHSA-gfvf-j8jh-jxxw",
+  "html_url": "https://github.com/anthropics/claude-code/security/advisories/GHSA-gfvf-j8jh-jxxw",
+  "summary": "Managed Settings Not Applied When a Stored API Key Was Preferred Over Enterprise Sign-In",
+  "severity": "low",
+  "author": null,
+  "publisher": {
+   "login": "OctavianGuzu",
+   "id": 23151373,
+   "node_id": "MDQ6VXNlcjIzMTUxMzcz",
+   "avatar_url": "https://avatars.githubusercontent.com/u/23151373?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/OctavianGuzu",
+   "html_url": "https://github.com/OctavianGuzu",
+   "followers_url": "https://api.github.com/users/OctavianGuzu/followers",
+   "following_url": "https://api.github.com/users/OctavianGuzu/following{/other_user}",
+   "gists_url": "https://api.github.com/users/OctavianGuzu/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/OctavianGuzu/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/OctavianGuzu/subscriptions",
+   "organizations_url": "https://api.github.com/users/OctavianGuzu/orgs",
+   "repos_url": "https://api.github.com/users/OctavianGuzu/repos",
+   "events_url": "https://api.github.com/users/OctavianGuzu/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/OctavianGuzu/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2026-09-29T21:44:55Z",
+  "published_at": "2026-09-29T21:44:55Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "vulnerabilities": [
+   {
+    "package": {
+     "ecosystem": "npm",
+     "name": "@anthropic-ai/claude-code"
+    },
+    "vulnerable_version_range": ">= 2.0.68, < 2.1.260",
+    "patched_versions": "2.1.260",
+    "vulnerable_functions": []
+   }
+  ],
+  "cvss_severities": {
+   "cvss_v3": {
+    "vector_string": null,
+    "score": null
+   },
+   "cvss_v4": {
+    "vector_string": "CVSS:4.0/AV:L/AC:L/AT:P/PR:L/UI:N/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N",
+    "score": 2.0
+   }
+  },
+  "cwe_ids": [
+   "CWE-696"
+  ],
+  "comments": 2,
+  "cvss": {
+   "vector_string": null,
+   "score": null
+  }
+ },
+ {
+  "ghsa_id": "GHSA-pq7j-f95f-qfcv",
+  "cve_id": "CVE-2026-86063",
+  "url": "https://api.github.com/repos/anthropics/claude-code/security-advisories/GHSA-pq7j-f95f-qfcv",
+  "html_url": "https://github.com/anthropics/claude-code/security/advisories/GHSA-pq7j-f95f-qfcv",
+  "summary": "Plugin Commit SHA Pin Bypass Allows Installation of Attacker-Controlled Code",
+  "severity": "high",
+  "author": null,
+  "publisher": {
+   "login": "ddworken",
+   "id": 5304541,
+   "node_id": "MDQ6VXNlcjUzMDQ1NDE=",
+   "avatar_url": "https://avatars.githubusercontent.com/u/5304541?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/ddworken",
+   "html_url": "https://github.com/ddworken",
+   "followers_url": "https://api.github.com/users/ddworken/followers",
+   "following_url": "https://api.github.com/users/ddworken/following{/other_user}",
+   "gists_url": "https://api.github.com/users/ddworken/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/ddworken/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/ddworken/subscriptions",
+   "organizations_url": "https://api.github.com/users/ddworken/orgs",
+   "repos_url": "https://api.github.com/users/ddworken/repos",
+   "events_url": "https://api.github.com/users/ddworken/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/ddworken/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2026-10-09T15:14:01Z",
+  "published_at": "2026-10-09T15:14:01Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "vulnerabilities": [
+   {
+    "package": {
+     "ecosystem": "npm",
+     "name": "@anthropic-ai/claude-code"
+    },
+    "vulnerable_version_range": "< 2.1.179",
+    "patched_versions": "2.1.179",
+    "vulnerable_functions": []
+   }
+  ],
+  "cvss_severities": {
+   "cvss_v3": {
+    "vector_string": null,
+    "score": null
+   },
+   "cvss_v4": {
+    "vector_string": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:P/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N",
+    "score": 7.7
+   }
+  },
+  "cwe_ids": [
+   "CWE-494",
+   "CWE-829"
+  ],
+  "comments": 1,
+  "cvss": {
+   "vector_string": null,
+   "score": null
+  }
+ },
+ {
+  "ghsa_id": "GHSA-5j29-h97v-84ch",
+  "cve_id": "CVE-2026-103435",
+  "url": "https://api.github.com/repos/anthropics/claude-code/security-advisories/GHSA-5j29-h97v-84ch",
+  "html_url": "https://github.com/anthropics/claude-code/security/advisories/GHSA-5j29-h97v-84ch",
+  "summary": "Arbitrary File Write via Write-Time Symlink Following (TOCTOU) in Claude Code",
+  "severity": "high",
+  "author": null,
+  "publisher": {
+   "login": "ddworken",
+   "id": 5304541,
+   "node_id": "MDQ6VXNlcjUzMDQ1NDE=",
+   "avatar_url": "https://avatars.githubusercontent.com/u/5304541?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/ddworken",
+   "html_url": "https://github.com/ddworken",
+   "followers_url": "https://api.github.com/users/ddworken/followers",
+   "following_url": "https://api.github.com/users/ddworken/following{/other_user}",
+   "gists_url": "https://api.github.com/users/ddworken/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/ddworken/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/ddworken/subscriptions",
+   "organizations_url": "https://api.github.com/users/ddworken/orgs",
+   "repos_url": "https://api.github.com/users/ddworken/repos",
+   "events_url": "https://api.github.com/users/ddworken/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/ddworken/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2026-10-05T12:45:33Z",
+  "published_at": "2026-10-05T12:45:33Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "vulnerabilities": [
+   {
+    "package": {
+     "ecosystem": "npm",
+     "name": "@anthropic-ai/claude-code"
+    },
+    "vulnerable_version_range": "< 2.1.129",
+    "patched_versions": "2.1.129",
+    "vulnerable_functions": []
+   }
+  ],
+  "cvss_severities": {
+   "cvss_v3": {
+    "vector_string": null,
+    "score": null
+   },
+   "cvss_v4": {
+    "vector_string": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:P/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N",
+    "score": 7.7
+   }
+  },
+  "cwe_ids": [
+   "CWE-22",
+   "CWE-61",
+   "CWE-367"
+  ],
+  "comments": 0,
+  "cvss": {
+   "vector_string": null,
+   "score": null
+  }
+ },
+ {
+  "ghsa_id": "GHSA-7835-87q9-rgvv",
+  "cve_id": "CVE-2026-55607",
+  "url": "https://api.github.com/repos/anthropics/claude-code/security-advisories/GHSA-7835-87q9-rgvv",
+  "html_url": "https://github.com/anthropics/claude-code/security/advisories/GHSA-7835-87q9-rgvv",
+  "summary": "Sandbox Escape via Git Worktree Path Confusion Allows Unsandboxed Code Execution",
+  "severity": "high",
+  "author": null,
+  "publisher": {
+   "login": "ddworken",
+   "id": 5304541,
+   "node_id": "MDQ6VXNlcjUzMDQ1NDE=",
+   "avatar_url": "https://avatars.githubusercontent.com/u/5304541?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/ddworken",
+   "html_url": "https://github.com/ddworken",
+   "followers_url": "https://api.github.com/users/ddworken/followers",
+   "following_url": "https://api.github.com/users/ddworken/following{/other_user}",
+   "gists_url": "https://api.github.com/users/ddworken/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/ddworken/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/ddworken/subscriptions",
+   "organizations_url": "https://api.github.com/users/ddworken/orgs",
+   "repos_url": "https://api.github.com/users/ddworken/repos",
+   "events_url": "https://api.github.com/users/ddworken/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/ddworken/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2026-06-25T13:14:35Z",
+  "published_at": "2026-06-25T13:14:35Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "vulnerabilities": [
+   {
+    "package": {
+     "ecosystem": "npm",
+     "name": "@anthropic-ai/claude-code"
+    },
+    "vulnerable_version_range": ">= 2.1.38, < 2.1.163",
+    "patched_versions": "2.1.163",
+    "vulnerable_functions": []
+   }
+  ],
+  "cvss_severities": {
+   "cvss_v3": {
+    "vector_string": null,
+    "score": null
+   },
+   "cvss_v4": {
+    "vector_string": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:P/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N",
+    "score": 7.7
+   }
+  },
+  "cwe_ids": [
+   "CWE-22",
+   "CWE-59",
+   "CWE-78"
+  ],
+  "comments": 1,
+  "cvss": {
+   "vector_string": null,
+   "score": null
+  }
+ },
+ {
+  "ghsa_id": "GHSA-fg94-h982-f3mm",
+  "cve_id": "CVE-2026-54316",
+  "url": "https://api.github.com/repos/anthropics/claude-code/security-advisories/GHSA-fg94-h982-f3mm",
+  "html_url": "https://github.com/anthropics/claude-code/security/advisories/GHSA-fg94-h982-f3mm",
+  "summary": "Out-of-Band Data Exfiltration via Pre-Approved HuggingFace Domain in WebFetch",
+  "severity": "medium",
+  "author": null,
+  "publisher": {
+   "login": "ddworken",
+   "id": 5304541,
+   "node_id": "MDQ6VXNlcjUzMDQ1NDE=",
+   "avatar_url": "https://avatars.githubusercontent.com/u/5304541?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/ddworken",
+   "html_url": "https://github.com/ddworken",
+   "followers_url": "https://api.github.com/users/ddworken/followers",
+   "following_url": "https://api.github.com/users/ddworken/following{/other_user}",
+   "gists_url": "https://api.github.com/users/ddworken/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/ddworken/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/ddworken/subscriptions",
+   "organizations_url": "https://api.github.com/users/ddworken/orgs",
+   "repos_url": "https://api.github.com/users/ddworken/repos",
+   "events_url": "https://api.github.com/users/ddworken/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/ddworken/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2026-06-13T11:40:00Z",
+  "published_at": "2026-06-13T11:40:00Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "vulnerabilities": [
+   {
+    "package": {
+     "ecosystem": "npm",
+     "name": "@anthropic-ai/claude-code"
+    },
+    "vulnerable_version_range": ">= 0.2.54, < 2.1.163",
+    "patched_versions": "2.1.163",
+    "vulnerable_functions": []
+   }
+  ],
+  "cvss_severities": {
+   "cvss_v3": {
+    "vector_string": null,
+    "score": null
+   },
+   "cvss_v4": {
+    "vector_string": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:P/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N",
+    "score": 6.0
+   }
+  },
+  "cwe_ids": [
+   "CWE-183",
+   "CWE-200",
+   "CWE-515"
+  ],
+  "comments": 1,
+  "cvss": {
+   "vector_string": null,
+   "score": null
+  }
+ },
+ {
+  "ghsa_id": "GHSA-4p2j-qj3c-6x84",
+  "cve_id": "CVE-2026-88066",
+  "url": "https://api.github.com/repos/anthropics/claude-code/security-advisories/GHSA-4p2j-qj3c-6x84",
+  "html_url": "https://github.com/anthropics/claude-code/security/advisories/GHSA-4p2j-qj3c-6x84",
+  "summary": "Uncontrolled Search Path Enables Arbitrary Code Execution via Malicious Git Executable",
+  "severity": "high",
+  "author": null,
+  "publisher": {
+   "login": "ddworken",
+   "id": 5304541,
+   "node_id": "MDQ6VXNlcjUzMDQ1NDE=",
+   "avatar_url": "https://avatars.githubusercontent.com/u/5304541?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/ddworken",
+   "html_url": "https://github.com/ddworken",
+   "followers_url": "https://api.github.com/users/ddworken/followers",
+   "following_url": "https://api.github.com/users/ddworken/following{/other_user}",
+   "gists_url": "https://api.github.com/users/ddworken/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/ddworken/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/ddworken/subscriptions",
+   "organizations_url": "https://api.github.com/users/ddworken/orgs",
+   "repos_url": "https://api.github.com/users/ddworken/repos",
+   "events_url": "https://api.github.com/users/ddworken/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/ddworken/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2026-10-13T12:24:43Z",
+  "published_at": "2026-10-13T12:24:43Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "vulnerabilities": [
+   {
+    "package": {
+     "ecosystem": "anthropic",
+     "name": "Claude Desktop"
+    },
+    "vulnerable_version_range": "< 1.8089.0",
+    "patched_versions": "1.8089.0",
+    "vulnerable_functions": []
+   }
+  ],
+  "cvss_severities": {
+   "cvss_v3": {
+    "vector_string": null,
+    "score": null
+   },
+   "cvss_v4": {
+    "vector_string": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:A/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N",
+    "score": 7.5
+   }
+  },
+  "cwe_ids": [
+   "CWE-427"
+  ],
+  "comments": 2,
+  "cvss": {
+   "vector_string": null,
+   "score": null
+  }
+ },
+ {
+  "ghsa_id": "GHSA-4vp2-6q8c-pvq2",
+  "cve_id": "CVE-2026-46406",
+  "url": "https://api.github.com/repos/anthropics/claude-code/security-advisories/GHSA-4vp2-6q8c-pvq2",
+  "html_url": "https://github.com/anthropics/claude-code/security/advisories/GHSA-4vp2-6q8c-pvq2",
+  "summary": "Insecure Temporary File in /copy Command Enables Response Disclosure and Symlink-Based File Write",
+  "severity": "medium",
+  "author": null,
+  "publisher": {
+   "login": "OctavianGuzu",
+   "id": 23151373,
+   "node_id": "MDQ6VXNlcjIzMTUxMzcz",
+   "avatar_url": "https://avatars.githubusercontent.com/u/23151373?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/OctavianGuzu",
+   "html_url": "https://github.com/OctavianGuzu",
+   "followers_url": "https://api.github.com/users/OctavianGuzu/followers",
+   "following_url": "https://api.github.com/users/OctavianGuzu/following{/other_user}",
+   "gists_url": "https://api.github.com/users/OctavianGuzu/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/OctavianGuzu/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/OctavianGuzu/subscriptions",
+   "organizations_url": "https://api.github.com/users/OctavianGuzu/orgs",
+   "repos_url": "https://api.github.com/users/OctavianGuzu/repos",
+   "events_url": "https://api.github.com/users/OctavianGuzu/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/OctavianGuzu/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2026-06-25T13:29:49Z",
+  "published_at": "2026-06-25T13:29:49Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "vulnerabilities": [
+   {
+    "package": {
+     "ecosystem": "npm",
+     "name": "@anthropic-ai/claude-code"
+    },
+    "vulnerable_version_range": ">= 2.1.59, < 2.1.128",
+    "patched_versions": "2.1.128",
+    "vulnerable_functions": []
+   }
+  ],
+  "cvss_severities": {
+   "cvss_v3": {
+    "vector_string": null,
+    "score": null
+   },
+   "cvss_v4": {
+    "vector_string": "CVSS:4.0/AV:L/AC:L/AT:P/PR:L/UI:A/VC:L/VI:L/VA:H/SC:N/SI:N/SA:N",
+    "score": 4.4
+   }
+  },
+  "cwe_ids": [
+   "CWE-59",
+   "CWE-200",
+   "CWE-377"
+  ],
+  "comments": 1,
+  "cvss": {
+   "vector_string": null,
+   "score": null
+  }
+ },
+ {
+  "ghsa_id": "GHSA-5p5x-5294-qhp3",
+  "cve_id": "CVE-2026-44470",
+  "url": "https://api.github.com/repos/anthropics/claude-code/security-advisories/GHSA-5p5x-5294-qhp3",
+  "html_url": "https://github.com/anthropics/claude-code/security/advisories/GHSA-5p5x-5294-qhp3",
+  "summary": "Local Privilege Escalation via Directory Junction in CoworkVMService",
+  "severity": "high",
+  "author": null,
+  "publisher": {
+   "login": "OctavianGuzu",
+   "id": 23151373,
+   "node_id": "MDQ6VXNlcjIzMTUxMzcz",
+   "avatar_url": "https://avatars.githubusercontent.com/u/23151373?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/OctavianGuzu",
+   "html_url": "https://github.com/OctavianGuzu",
+   "followers_url": "https://api.github.com/users/OctavianGuzu/followers",
+   "following_url": "https://api.github.com/users/OctavianGuzu/following{/other_user}",
+   "gists_url": "https://api.github.com/users/OctavianGuzu/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/OctavianGuzu/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/OctavianGuzu/subscriptions",
+   "organizations_url": "https://api.github.com/users/OctavianGuzu/orgs",
+   "repos_url": "https://api.github.com/users/OctavianGuzu/repos",
+   "events_url": "https://api.github.com/users/OctavianGuzu/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/OctavianGuzu/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2026-05-06T20:25:23Z",
+  "published_at": "2026-05-06T20:25:23Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "vulnerabilities": [
+   {
+    "package": {
+     "ecosystem": "anthropic",
+     "name": "Claude Desktop"
+    },
+    "vulnerable_version_range": "< 1.3834.0",
+    "patched_versions": "1.3834.0",
+    "vulnerable_functions": []
+   }
+  ],
+  "cvss_severities": {
+   "cvss_v3": {
+    "vector_string": null,
+    "score": null
+   },
+   "cvss_v4": {
+    "vector_string": "CVSS:4.0/AV:L/AC:L/AT:N/PR:L/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N",
+    "score": 8.5
+   }
+  },
+  "cwe_ids": [
+   "CWE-59",
+   "CWE-269"
+  ],
+  "comments": 1,
+  "cvss": {
+   "vector_string": null,
+   "score": null
+  }
+ },
+ {
+  "ghsa_id": "GHSA-3rwf-2g6p-c2f9",
+  "cve_id": "CVE-2026-44467",
+  "url": "https://api.github.com/repos/anthropics/claude-code/security-advisories/GHSA-3rwf-2g6p-c2f9",
+  "html_url": "https://github.com/anthropics/claude-code/security/advisories/GHSA-3rwf-2g6p-c2f9",
+  "summary": "SSH Host Key Verification Bypass Allows Man-in-the-Middle Attack on Remote Sessions",
+  "severity": "high",
+  "author": null,
+  "publisher": {
+   "login": "OctavianGuzu",
+   "id": 23151373,
+   "node_id": "MDQ6VXNlcjIzMTUxMzcz",
+   "avatar_url": "https://avatars.githubusercontent.com/u/23151373?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/OctavianGuzu",
+   "html_url": "https://github.com/OctavianGuzu",
+   "followers_url": "https://api.github.com/users/OctavianGuzu/followers",
+   "following_url": "https://api.github.com/users/OctavianGuzu/following{/other_user}",
+   "gists_url": "https://api.github.com/users/OctavianGuzu/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/OctavianGuzu/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/OctavianGuzu/subscriptions",
+   "organizations_url": "https://api.github.com/users/OctavianGuzu/orgs",
+   "repos_url": "https://api.github.com/users/OctavianGuzu/repos",
+   "events_url": "https://api.github.com/users/OctavianGuzu/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/OctavianGuzu/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2026-05-06T20:27:32Z",
+  "published_at": "2026-05-06T20:27:32Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "vulnerabilities": [
+   {
+    "package": {
+     "ecosystem": "anthropic",
+     "name": "Claude Desktop"
+    },
+    "vulnerable_version_range": ">= 1.2581.0, < 1.4304.0",
+    "patched_versions": "1.4304.0",
+    "vulnerable_functions": []
+   }
+  ],
+  "cvss_severities": {
+   "cvss_v3": {
+    "vector_string": null,
+    "score": null
+   },
+   "cvss_v4": {
+    "vector_string": "CVSS:4.0/AV:A/AC:L/AT:P/PR:N/UI:P/VC:H/VI:H/VA:N/SC:N/SI:N/SA:N",
+    "score": 7.4
+   }
+  },
+  "cwe_ids": [
+   "CWE-297",
+   "CWE-322"
+  ],
+  "comments": 1,
+  "cvss": {
+   "vector_string": null,
+   "score": null
+  }
+ },
+ {
+  "ghsa_id": "GHSA-5cwg-9f6j-9jvx",
+  "cve_id": "CVE-2026-35603",
+  "url": "https://api.github.com/repos/anthropics/claude-code/security-advisories/GHSA-5cwg-9f6j-9jvx",
+  "html_url": "https://github.com/anthropics/claude-code/security/advisories/GHSA-5cwg-9f6j-9jvx",
+  "summary": "Insecure System-Wide Configuration Loading Enables Local Privilege Escalation on Windows",
+  "severity": "medium",
+  "author": null,
+  "publisher": {
+   "login": "OctavianGuzu",
+   "id": 23151373,
+   "node_id": "MDQ6VXNlcjIzMTUxMzcz",
+   "avatar_url": "https://avatars.githubusercontent.com/u/23151373?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/OctavianGuzu",
+   "html_url": "https://github.com/OctavianGuzu",
+   "followers_url": "https://api.github.com/users/OctavianGuzu/followers",
+   "following_url": "https://api.github.com/users/OctavianGuzu/following{/other_user}",
+   "gists_url": "https://api.github.com/users/OctavianGuzu/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/OctavianGuzu/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/OctavianGuzu/subscriptions",
+   "organizations_url": "https://api.github.com/users/OctavianGuzu/orgs",
+   "repos_url": "https://api.github.com/users/OctavianGuzu/repos",
+   "events_url": "https://api.github.com/users/OctavianGuzu/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/OctavianGuzu/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2026-04-17T10:41:05Z",
+  "published_at": "2026-04-17T10:41:05Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "vulnerabilities": [
+   {
+    "package": {
+     "ecosystem": "npm",
+     "name": "@anthropic-ai/claude-code"
+    },
+    "vulnerable_version_range": "< 2.1.75",
+    "patched_versions": "2.1.75",
+    "vulnerable_functions": []
+   }
+  ],
+  "cvss_severities": {
+   "cvss_v3": {
+    "vector_string": null,
+    "score": null
+   },
+   "cvss_v4": {
+    "vector_string": "CVSS:4.0/AV:L/AC:L/AT:P/PR:L/UI:P/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N",
+    "score": 5.4
+   }
+  },
+  "cwe_ids": [
+   "CWE-426"
+  ],
+  "comments": 1,
+  "cvss": {
+   "vector_string": null,
+   "score": null
+  }
+ },
+ {
+  "ghsa_id": "GHSA-q5hj-mxqh-vv77",
+  "cve_id": "CVE-2026-40068",
+  "url": "https://api.github.com/repos/anthropics/claude-code/security-advisories/GHSA-q5hj-mxqh-vv77",
+  "html_url": "https://github.com/anthropics/claude-code/security/advisories/GHSA-q5hj-mxqh-vv77",
+  "summary": "Trust Dialog Bypass via Git Worktree Spoofing Allows Arbitrary Code Execution",
+  "severity": "high",
+  "author": null,
+  "publisher": {
+   "login": "OctavianGuzu",
+   "id": 23151373,
+   "node_id": "MDQ6VXNlcjIzMTUxMzcz",
+   "avatar_url": "https://avatars.githubusercontent.com/u/23151373?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/OctavianGuzu",
+   "html_url": "https://github.com/OctavianGuzu",
+   "followers_url": "https://api.github.com/users/OctavianGuzu/followers",
+   "following_url": "https://api.github.com/users/OctavianGuzu/following{/other_user}",
+   "gists_url": "https://api.github.com/users/OctavianGuzu/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/OctavianGuzu/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/OctavianGuzu/subscriptions",
+   "organizations_url": "https://api.github.com/users/OctavianGuzu/orgs",
+   "repos_url": "https://api.github.com/users/OctavianGuzu/repos",
+   "events_url": "https://api.github.com/users/OctavianGuzu/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/OctavianGuzu/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2026-04-24T11:53:10Z",
+  "published_at": "2026-04-24T11:53:10Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "vulnerabilities": [
+   {
+    "package": {
+     "ecosystem": "npm",
+     "name": "@anthropic-ai/claude-code"
+    },
+    "vulnerable_version_range": ">= 2.1.63, < 2.1.84",
+    "patched_versions": "2.1.84",
+    "vulnerable_functions": []
+   }
+  ],
+  "cvss_severities": {
+   "cvss_v3": {
+    "vector_string": null,
+    "score": null
+   },
+   "cvss_v4": {
+    "vector_string": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:P/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N",
+    "score": 7.7
+   }
+  },
+  "cwe_ids": [
+   "CWE-20",
+   "CWE-77"
+  ],
+  "comments": 1,
+  "cvss": {
+   "vector_string": null,
+   "score": null
+  }
+ },
+ {
+  "ghsa_id": "GHSA-mmgp-wc2j-qcv7",
+  "cve_id": "CVE-2026-33068",
+  "url": "https://api.github.com/repos/anthropics/claude-code/security-advisories/GHSA-mmgp-wc2j-qcv7",
+  "html_url": "https://github.com/anthropics/claude-code/security/advisories/GHSA-mmgp-wc2j-qcv7",
+  "summary": "Workspace Trust Dialog Bypass via Repo-Controlled Settings File",
+  "severity": "high",
+  "author": null,
+  "publisher": {
+   "login": "dmckennirey-ant",
+   "id": 230042611,
+   "node_id": "U_kgDODbYr8w",
+   "avatar_url": "https://avatars.githubusercontent.com/u/230042611?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/dmckennirey-ant",
+   "html_url": "https://github.com/dmckennirey-ant",
+   "followers_url": "https://api.github.com/users/dmckennirey-ant/followers",
+   "following_url": "https://api.github.com/users/dmckennirey-ant/following{/other_user}",
+   "gists_url": "https://api.github.com/users/dmckennirey-ant/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/dmckennirey-ant/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/dmckennirey-ant/subscriptions",
+   "organizations_url": "https://api.github.com/users/dmckennirey-ant/orgs",
+   "repos_url": "https://api.github.com/users/dmckennirey-ant/repos",
+   "events_url": "https://api.github.com/users/dmckennirey-ant/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/dmckennirey-ant/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2026-03-18T21:35:35Z",
+  "published_at": "2026-03-18T21:35:35Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "vulnerabilities": [
+   {
+    "package": {
+     "ecosystem": "npm",
+     "name": "@anthropic-ai/claude-code"
+    },
+    "vulnerable_version_range": "< 2.1.53",
+    "patched_versions": "2.1.53",
+    "vulnerable_functions": []
+   }
+  ],
+  "cvss_severities": {
+   "cvss_v3": {
+    "vector_string": null,
+    "score": null
+   },
+   "cvss_v4": {
+    "vector_string": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:P/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N",
+    "score": 7.7
+   }
+  },
+  "cwe_ids": [
+   "CWE-807"
+  ],
+  "comments": 1,
+  "cvss": {
+   "vector_string": null,
+   "score": null
+  }
+ },
+ {
+  "ghsa_id": "GHSA-vp62-r36r-9xqp",
+  "cve_id": "CVE-2026-39861",
+  "url": "https://api.github.com/repos/anthropics/claude-code/security-advisories/GHSA-vp62-r36r-9xqp",
+  "html_url": "https://github.com/anthropics/claude-code/security/advisories/GHSA-vp62-r36r-9xqp",
+  "summary": "Sandbox Escape via Symlink Following Allows Arbitrary File Write Outside Workspace",
+  "severity": "high",
+  "author": null,
+  "publisher": {
+   "login": "OctavianGuzu",
+   "id": 23151373,
+   "node_id": "MDQ6VXNlcjIzMTUxMzcz",
+   "avatar_url": "https://avatars.githubusercontent.com/u/23151373?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/OctavianGuzu",
+   "html_url": "https://github.com/OctavianGuzu",
+   "followers_url": "https://api.github.com/users/OctavianGuzu/followers",
+   "following_url": "https://api.github.com/users/OctavianGuzu/following{/other_user}",
+   "gists_url": "https://api.github.com/users/OctavianGuzu/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/OctavianGuzu/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/OctavianGuzu/subscriptions",
+   "organizations_url": "https://api.github.com/users/OctavianGuzu/orgs",
+   "repos_url": "https://api.github.com/users/OctavianGuzu/repos",
+   "events_url": "https://api.github.com/users/OctavianGuzu/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/OctavianGuzu/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2026-04-20T10:19:11Z",
+  "published_at": "2026-04-20T10:19:11Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "vulnerabilities": [
+   {
+    "package": {
+     "ecosystem": "npm",
+     "name": "@anthropic-ai/claude-code"
+    },
+    "vulnerable_version_range": "< 2.1.64",
+    "patched_versions": "2.1.64",
+    "vulnerable_functions": []
+   }
+  ],
+  "cvss_severities": {
+   "cvss_v3": {
+    "vector_string": null,
+    "score": null
+   },
+   "cvss_v4": {
+    "vector_string": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:P/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N",
+    "score": 7.7
+   }
+  },
+  "cwe_ids": [
+   "CWE-22",
+   "CWE-61"
+  ],
+  "comments": 1,
+  "cvss": {
+   "vector_string": null,
+   "score": null
+  }
+ },
+ {
+  "ghsa_id": "GHSA-66q4-vfjg-2qhh",
+  "cve_id": "CVE-2026-25722",
+  "url": "https://api.github.com/repos/anthropics/claude-code/security-advisories/GHSA-66q4-vfjg-2qhh",
+  "html_url": "https://github.com/anthropics/claude-code/security/advisories/GHSA-66q4-vfjg-2qhh",
+  "summary": "Command Injection via Directory Change Bypasses Write Protection",
+  "severity": "high",
+  "author": null,
+  "publisher": {
+   "login": "ddworken",
+   "id": 5304541,
+   "node_id": "MDQ6VXNlcjUzMDQ1NDE=",
+   "avatar_url": "https://avatars.githubusercontent.com/u/5304541?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/ddworken",
+   "html_url": "https://github.com/ddworken",
+   "followers_url": "https://api.github.com/users/ddworken/followers",
+   "following_url": "https://api.github.com/users/ddworken/following{/other_user}",
+   "gists_url": "https://api.github.com/users/ddworken/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/ddworken/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/ddworken/subscriptions",
+   "organizations_url": "https://api.github.com/users/ddworken/orgs",
+   "repos_url": "https://api.github.com/users/ddworken/repos",
+   "events_url": "https://api.github.com/users/ddworken/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/ddworken/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2026-02-06T00:15:51Z",
+  "published_at": "2026-02-06T00:15:51Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "vulnerabilities": [
+   {
+    "package": {
+     "ecosystem": "npm",
+     "name": "@anthropic-ai/claude-code"
+    },
+    "vulnerable_version_range": "< v2.0.57",
+    "patched_versions": "v2.0.57",
+    "vulnerable_functions": []
+   }
+  ],
+  "cvss_severities": {
+   "cvss_v3": {
+    "vector_string": null,
+    "score": null
+   },
+   "cvss_v4": {
+    "vector_string": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:P/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N",
+    "score": 7.7
+   }
+  },
+  "cwe_ids": [
+   "CWE-20",
+   "CWE-78"
+  ],
+  "comments": 1,
+  "cvss": {
+   "vector_string": null,
+   "score": null
+  }
+ },
+ {
+  "ghsa_id": "GHSA-mhg7-666j-cqg4",
+  "cve_id": "CVE-2026-25723",
+  "url": "https://api.github.com/repos/anthropics/claude-code/security-advisories/GHSA-mhg7-666j-cqg4",
+  "html_url": "https://github.com/anthropics/claude-code/security/advisories/GHSA-mhg7-666j-cqg4",
+  "summary": "Command Injection via Piped sed Command Bypasses File Write Restrictions",
+  "severity": "high",
+  "author": null,
+  "publisher": {
+   "login": "ddworken",
+   "id": 5304541,
+   "node_id": "MDQ6VXNlcjUzMDQ1NDE=",
+   "avatar_url": "https://avatars.githubusercontent.com/u/5304541?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/ddworken",
+   "html_url": "https://github.com/ddworken",
+   "followers_url": "https://api.github.com/users/ddworken/followers",
+   "following_url": "https://api.github.com/users/ddworken/following{/other_user}",
+   "gists_url": "https://api.github.com/users/ddworken/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/ddworken/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/ddworken/subscriptions",
+   "organizations_url": "https://api.github.com/users/ddworken/orgs",
+   "repos_url": "https://api.github.com/users/ddworken/repos",
+   "events_url": "https://api.github.com/users/ddworken/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/ddworken/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2026-02-06T00:14:51Z",
+  "published_at": "2026-02-06T00:14:51Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "vulnerabilities": [
+   {
+    "package": {
+     "ecosystem": "npm",
+     "name": "@anthropic-ai/claude-code"
+    },
+    "vulnerable_version_range": "< v2.0.55",
+    "patched_versions": "v2.0.55",
+    "vulnerable_functions": []
+   }
+  ],
+  "cvss_severities": {
+   "cvss_v3": {
+    "vector_string": null,
+    "score": null
+   },
+   "cvss_v4": {
+    "vector_string": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:P/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N",
+    "score": 7.7
+   }
+  },
+  "cwe_ids": [
+   "CWE-20",
+   "CWE-78"
+  ],
+  "comments": 1,
+  "cvss": {
+   "vector_string": null,
+   "score": null
+  }
+ },
+ {
+  "ghsa_id": "GHSA-ff64-7w26-62rf",
+  "cve_id": "CVE-2026-25725",
+  "url": "https://api.github.com/repos/anthropics/claude-code/security-advisories/GHSA-ff64-7w26-62rf",
+  "html_url": "https://github.com/anthropics/claude-code/security/advisories/GHSA-ff64-7w26-62rf",
+  "summary": "Sandbox Escape via Persistent Configuration Injection in settings.json",
+  "severity": "high",
+  "author": null,
+  "publisher": {
+   "login": "ddworken",
+   "id": 5304541,
+   "node_id": "MDQ6VXNlcjUzMDQ1NDE=",
+   "avatar_url": "https://avatars.githubusercontent.com/u/5304541?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/ddworken",
+   "html_url": "https://github.com/ddworken",
+   "followers_url": "https://api.github.com/users/ddworken/followers",
+   "following_url": "https://api.github.com/users/ddworken/following{/other_user}",
+   "gists_url": "https://api.github.com/users/ddworken/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/ddworken/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/ddworken/subscriptions",
+   "organizations_url": "https://api.github.com/users/ddworken/orgs",
+   "repos_url": "https://api.github.com/users/ddworken/repos",
+   "events_url": "https://api.github.com/users/ddworken/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/ddworken/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2026-02-06T00:13:40Z",
+  "published_at": "2026-02-06T00:13:40Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "vulnerabilities": [
+   {
+    "package": {
+     "ecosystem": "npm",
+     "name": "@anthropic-ai/claude-code"
+    },
+    "vulnerable_version_range": "< v2.1.2",
+    "patched_versions": "v2.1.2",
+    "vulnerable_functions": []
+   }
+  ],
+  "cvss_severities": {
+   "cvss_v3": {
+    "vector_string": null,
+    "score": null
+   },
+   "cvss_v4": {
+    "vector_string": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:P/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N",
+    "score": 7.7
+   }
+  },
+  "cwe_ids": [
+   "CWE-501",
+   "CWE-668"
+  ],
+  "comments": 1,
+  "cvss": {
+   "vector_string": null,
+   "score": null
+  }
+ },
+ {
+  "ghsa_id": "GHSA-4q92-rfm6-2cqx",
+  "cve_id": "CVE-2026-25724",
+  "url": "https://api.github.com/repos/anthropics/claude-code/security-advisories/GHSA-4q92-rfm6-2cqx",
+  "html_url": "https://github.com/anthropics/claude-code/security/advisories/GHSA-4q92-rfm6-2cqx",
+  "summary": "Permission Deny Bypass Through Symbolic Links",
+  "severity": "low",
+  "author": null,
+  "publisher": {
+   "login": "ddworken",
+   "id": 5304541,
+   "node_id": "MDQ6VXNlcjUzMDQ1NDE=",
+   "avatar_url": "https://avatars.githubusercontent.com/u/5304541?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/ddworken",
+   "html_url": "https://github.com/ddworken",
+   "followers_url": "https://api.github.com/users/ddworken/followers",
+   "following_url": "https://api.github.com/users/ddworken/following{/other_user}",
+   "gists_url": "https://api.github.com/users/ddworken/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/ddworken/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/ddworken/subscriptions",
+   "organizations_url": "https://api.github.com/users/ddworken/orgs",
+   "repos_url": "https://api.github.com/users/ddworken/repos",
+   "events_url": "https://api.github.com/users/ddworken/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/ddworken/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2026-02-06T00:12:26Z",
+  "published_at": "2026-02-06T00:12:26Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "vulnerabilities": [
+   {
+    "package": {
+     "ecosystem": "npm",
+     "name": "@anthropic-ai/claude-code"
+    },
+    "vulnerable_version_range": "< v2.1.7",
+    "patched_versions": "v2.1.7",
+    "vulnerable_functions": []
+   }
+  ],
+  "cvss_severities": {
+   "cvss_v3": {
+    "vector_string": null,
+    "score": null
+   },
+   "cvss_v4": {
+    "vector_string": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:P/VC:L/VI:L/VA:L/SC:N/SI:N/SA:N",
+    "score": 2.3
+   }
+  },
+  "cwe_ids": [
+   "CWE-61",
+   "CWE-285"
+  ],
+  "comments": 1,
+  "cvss": {
+   "vector_string": null,
+   "score": null
+  }
+ },
+ {
+  "ghsa_id": "GHSA-qgqw-h4xq-7w8w",
+  "cve_id": "CVE-2026-24887",
+  "url": "https://api.github.com/repos/anthropics/claude-code/security-advisories/GHSA-qgqw-h4xq-7w8w",
+  "html_url": "https://github.com/anthropics/claude-code/security/advisories/GHSA-qgqw-h4xq-7w8w",
+  "summary": "Command Injection in find Command Bypasses User Approval Prompt",
+  "severity": "high",
+  "author": null,
+  "publisher": {
+   "login": "ddworken",
+   "id": 5304541,
+   "node_id": "MDQ6VXNlcjUzMDQ1NDE=",
+   "avatar_url": "https://avatars.githubusercontent.com/u/5304541?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/ddworken",
+   "html_url": "https://github.com/ddworken",
+   "followers_url": "https://api.github.com/users/ddworken/followers",
+   "following_url": "https://api.github.com/users/ddworken/following{/other_user}",
+   "gists_url": "https://api.github.com/users/ddworken/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/ddworken/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/ddworken/subscriptions",
+   "organizations_url": "https://api.github.com/users/ddworken/orgs",
+   "repos_url": "https://api.github.com/users/ddworken/repos",
+   "events_url": "https://api.github.com/users/ddworken/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/ddworken/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2026-02-03T19:23:21Z",
+  "published_at": "2026-02-03T19:13:11Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "vulnerabilities": [
+   {
+    "package": {
+     "ecosystem": "npm",
+     "name": "@anthropic-ai/claude-code"
+    },
+    "vulnerable_version_range": "< v2.0.72",
+    "patched_versions": "v2.0.72",
+    "vulnerable_functions": []
+   }
+  ],
+  "cvss_severities": {
+   "cvss_v3": {
+    "vector_string": null,
+    "score": null
+   },
+   "cvss_v4": {
+    "vector_string": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:P/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N",
+    "score": 7.7
+   }
+  },
+  "cwe_ids": [
+   "CWE-78",
+   "CWE-94"
+  ],
+  "comments": 1,
+  "cvss": {
+   "vector_string": null,
+   "score": null
+  }
+ },
+ {
+  "ghsa_id": "GHSA-q728-gf8j-w49r",
+  "cve_id": "CVE-2026-24053",
+  "url": "https://api.github.com/repos/anthropics/claude-code/security-advisories/GHSA-q728-gf8j-w49r",
+  "html_url": "https://github.com/anthropics/claude-code/security/advisories/GHSA-q728-gf8j-w49r",
+  "summary": "Path Restriction Bypass via ZSH Clobber Allows Arbitrary File Writes",
+  "severity": "high",
+  "author": null,
+  "publisher": {
+   "login": "ddworken",
+   "id": 5304541,
+   "node_id": "MDQ6VXNlcjUzMDQ1NDE=",
+   "avatar_url": "https://avatars.githubusercontent.com/u/5304541?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/ddworken",
+   "html_url": "https://github.com/ddworken",
+   "followers_url": "https://api.github.com/users/ddworken/followers",
+   "following_url": "https://api.github.com/users/ddworken/following{/other_user}",
+   "gists_url": "https://api.github.com/users/ddworken/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/ddworken/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/ddworken/subscriptions",
+   "organizations_url": "https://api.github.com/users/ddworken/orgs",
+   "repos_url": "https://api.github.com/users/ddworken/repos",
+   "events_url": "https://api.github.com/users/ddworken/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/ddworken/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2026-02-03T19:23:15Z",
+  "published_at": "2026-02-03T19:10:25Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "vulnerabilities": [
+   {
+    "package": {
+     "ecosystem": "npm",
+     "name": "@anthropic-ai/claude-code"
+    },
+    "vulnerable_version_range": "< v2.0.74",
+    "patched_versions": "v2.0.74",
+    "vulnerable_functions": []
+   }
+  ],
+  "cvss_severities": {
+   "cvss_v3": {
+    "vector_string": null,
+    "score": null
+   },
+   "cvss_v4": {
+    "vector_string": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:P/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N",
+    "score": 7.7
+   }
+  },
+  "cwe_ids": [
+   "CWE-20",
+   "CWE-22",
+   "CWE-78"
+  ],
+  "comments": 1,
+  "cvss": {
+   "vector_string": null,
+   "score": null
+  }
+ },
+ {
+  "ghsa_id": "GHSA-vhw5-3g5m-8ggf",
+  "cve_id": "CVE-2026-24052",
+  "url": "https://api.github.com/repos/anthropics/claude-code/security-advisories/GHSA-vhw5-3g5m-8ggf",
+  "html_url": "https://github.com/anthropics/claude-code/security/advisories/GHSA-vhw5-3g5m-8ggf",
+  "summary": "Domain Validation Bypass Allows Automatic Requests to Attacker-Controlled Domains",
+  "severity": "high",
+  "author": null,
+  "publisher": {
+   "login": "ddworken",
+   "id": 5304541,
+   "node_id": "MDQ6VXNlcjUzMDQ1NDE=",
+   "avatar_url": "https://avatars.githubusercontent.com/u/5304541?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/ddworken",
+   "html_url": "https://github.com/ddworken",
+   "followers_url": "https://api.github.com/users/ddworken/followers",
+   "following_url": "https://api.github.com/users/ddworken/following{/other_user}",
+   "gists_url": "https://api.github.com/users/ddworken/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/ddworken/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/ddworken/subscriptions",
+   "organizations_url": "https://api.github.com/users/ddworken/orgs",
+   "repos_url": "https://api.github.com/users/ddworken/repos",
+   "events_url": "https://api.github.com/users/ddworken/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/ddworken/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2026-02-03T19:21:19Z",
+  "published_at": "2026-02-03T19:05:06Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "vulnerabilities": [
+   {
+    "package": {
+     "ecosystem": "other",
+     "name": "@anthropic-ai/claude-code"
+    },
+    "vulnerable_version_range": "< v1.0.111",
+    "patched_versions": "v1.0.111",
+    "vulnerable_functions": []
+   }
+  ],
+  "cvss_severities": {
+   "cvss_v3": {
+    "vector_string": null,
+    "score": null
+   },
+   "cvss_v4": {
+    "vector_string": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:P/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N",
+    "score": 7.1
+   }
+  },
+  "cwe_ids": [
+   "CWE-20",
+   "CWE-601"
+  ],
+  "comments": 1,
+  "cvss": {
+   "vector_string": null,
+   "score": null
+  }
+ },
+ {
+  "ghsa_id": "GHSA-jh7p-qr78-84p7",
+  "cve_id": "CVE-2026-21852",
+  "url": "https://api.github.com/repos/anthropics/claude-code/security-advisories/GHSA-jh7p-qr78-84p7",
+  "html_url": "https://github.com/anthropics/claude-code/security/advisories/GHSA-jh7p-qr78-84p7",
+  "summary": "Malicious repo configuration can trigger data leakage via environment configuration used before trust confirmation",
+  "severity": "medium",
+  "author": null,
+  "publisher": {
+   "login": "ddworken",
+   "id": 5304541,
+   "node_id": "MDQ6VXNlcjUzMDQ1NDE=",
+   "avatar_url": "https://avatars.githubusercontent.com/u/5304541?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/ddworken",
+   "html_url": "https://github.com/ddworken",
+   "followers_url": "https://api.github.com/users/ddworken/followers",
+   "following_url": "https://api.github.com/users/ddworken/following{/other_user}",
+   "gists_url": "https://api.github.com/users/ddworken/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/ddworken/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/ddworken/subscriptions",
+   "organizations_url": "https://api.github.com/users/ddworken/orgs",
+   "repos_url": "https://api.github.com/users/ddworken/repos",
+   "events_url": "https://api.github.com/users/ddworken/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/ddworken/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2026-01-20T22:31:15Z",
+  "published_at": "2026-01-20T22:31:15Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "vulnerabilities": [
+   {
+    "package": {
+     "ecosystem": "npm",
+     "name": "@anthropic-ai/claude-code"
+    },
+    "vulnerable_version_range": "< v2.0.65",
+    "patched_versions": "v2.0.65",
+    "vulnerable_functions": []
+   }
+  ],
+  "cvss_severities": {
+   "cvss_v3": {
+    "vector_string": null,
+    "score": null
+   },
+   "cvss_v4": {
+    "vector_string": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:P/VC:L/VI:L/VA:L/SC:N/SI:N/SA:N",
+    "score": 5.3
+   }
+  },
+  "cwe_ids": [
+   "CWE-200",
+   "CWE-522"
+  ],
+  "comments": 1,
+  "cvss": {
+   "vector_string": null,
+   "score": null
+  }
+ },
+ {
+  "ghsa_id": "GHSA-xq4m-mc3c-vvg3",
+  "cve_id": "CVE-2025-66032",
+  "url": "https://api.github.com/repos/anthropics/claude-code/security-advisories/GHSA-xq4m-mc3c-vvg3",
+  "html_url": "https://github.com/anthropics/claude-code/security/advisories/GHSA-xq4m-mc3c-vvg3",
+  "summary": "Command Validation Bypass Allows Arbitrary Code Execution",
+  "severity": "high",
+  "author": null,
+  "publisher": {
+   "login": "ddworken",
+   "id": 5304541,
+   "node_id": "MDQ6VXNlcjUzMDQ1NDE=",
+   "avatar_url": "https://avatars.githubusercontent.com/u/5304541?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/ddworken",
+   "html_url": "https://github.com/ddworken",
+   "followers_url": "https://api.github.com/users/ddworken/followers",
+   "following_url": "https://api.github.com/users/ddworken/following{/other_user}",
+   "gists_url": "https://api.github.com/users/ddworken/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/ddworken/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/ddworken/subscriptions",
+   "organizations_url": "https://api.github.com/users/ddworken/orgs",
+   "repos_url": "https://api.github.com/users/ddworken/repos",
+   "events_url": "https://api.github.com/users/ddworken/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/ddworken/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2025-12-03T00:54:43Z",
+  "published_at": "2025-12-03T00:54:43Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "vulnerabilities": [
+   {
+    "package": {
+     "ecosystem": "npm",
+     "name": "@anthropic-ai/claude-code"
+    },
+    "vulnerable_version_range": "<v1.0.93",
+    "patched_versions": "v1.0.93",
+    "vulnerable_functions": []
+   }
+  ],
+  "cvss_severities": {
+   "cvss_v3": {
+    "vector_string": null,
+    "score": null
+   },
+   "cvss_v4": {
+    "vector_string": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:P/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N",
+    "score": 8.7
+   }
+  },
+  "cwe_ids": [
+   "CWE-77"
+  ],
+  "comments": 1,
+  "cvss": {
+   "vector_string": null,
+   "score": null
+  }
+ },
+ {
+  "ghsa_id": "GHSA-5hhx-v7f6-x7gv",
+  "cve_id": "CVE-2025-65099",
+  "url": "https://api.github.com/repos/anthropics/claude-code/security-advisories/GHSA-5hhx-v7f6-x7gv",
+  "html_url": "https://github.com/anthropics/claude-code/security/advisories/GHSA-5hhx-v7f6-x7gv",
+  "summary": "Command execution prior to Claude Code startup trust dialog",
+  "severity": "high",
+  "author": null,
+  "publisher": {
+   "login": "ddworken",
+   "id": 5304541,
+   "node_id": "MDQ6VXNlcjUzMDQ1NDE=",
+   "avatar_url": "https://avatars.githubusercontent.com/u/5304541?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/ddworken",
+   "html_url": "https://github.com/ddworken",
+   "followers_url": "https://api.github.com/users/ddworken/followers",
+   "following_url": "https://api.github.com/users/ddworken/following{/other_user}",
+   "gists_url": "https://api.github.com/users/ddworken/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/ddworken/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/ddworken/subscriptions",
+   "organizations_url": "https://api.github.com/users/ddworken/orgs",
+   "repos_url": "https://api.github.com/users/ddworken/repos",
+   "events_url": "https://api.github.com/users/ddworken/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/ddworken/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2025-12-22T05:08:24Z",
+  "published_at": "2025-11-19T02:34:10Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "vulnerabilities": [
+   {
+    "package": {
+     "ecosystem": "npm",
+     "name": "@anthropic-ai/claude-code"
+    },
+    "vulnerable_version_range": "<v1.0.39",
+    "patched_versions": "v1.0.39",
+    "vulnerable_functions": []
+   }
+  ],
+  "cvss_severities": {
+   "cvss_v3": {
+    "vector_string": null,
+    "score": null
+   },
+   "cvss_v4": {
+    "vector_string": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:P/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N",
+    "score": 7.7
+   }
+  },
+  "cwe_ids": [
+   "CWE-94"
+  ],
+  "comments": 1,
+  "cvss": {
+   "vector_string": null,
+   "score": null
+  }
+ },
+ {
+  "ghsa_id": "GHSA-7mv8-j34q-vp7q",
+  "cve_id": "CVE-2025-64755",
+  "url": "https://api.github.com/repos/anthropics/claude-code/security-advisories/GHSA-7mv8-j34q-vp7q",
+  "html_url": "https://github.com/anthropics/claude-code/security/advisories/GHSA-7mv8-j34q-vp7q",
+  "summary": "Sed Command Validation Bypass Allows Arbitrary File Writes",
+  "severity": "high",
+  "author": null,
+  "publisher": {
+   "login": "ddworken",
+   "id": 5304541,
+   "node_id": "MDQ6VXNlcjUzMDQ1NDE=",
+   "avatar_url": "https://avatars.githubusercontent.com/u/5304541?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/ddworken",
+   "html_url": "https://github.com/ddworken",
+   "followers_url": "https://api.github.com/users/ddworken/followers",
+   "following_url": "https://api.github.com/users/ddworken/following{/other_user}",
+   "gists_url": "https://api.github.com/users/ddworken/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/ddworken/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/ddworken/subscriptions",
+   "organizations_url": "https://api.github.com/users/ddworken/orgs",
+   "repos_url": "https://api.github.com/users/ddworken/repos",
+   "events_url": "https://api.github.com/users/ddworken/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/ddworken/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2025-11-20T18:54:54Z",
+  "published_at": "2025-11-20T18:54:54Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "vulnerabilities": [
+   {
+    "package": {
+     "ecosystem": "npm",
+     "name": "@anthropic-ai/claude-code"
+    },
+    "vulnerable_version_range": "<v2.0.31",
+    "patched_versions": "v2.0.31",
+    "vulnerable_functions": []
+   }
+  ],
+  "cvss_severities": {
+   "cvss_v3": {
+    "vector_string": null,
+    "score": null
+   },
+   "cvss_v4": {
+    "vector_string": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:P/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N",
+    "score": 8.7
+   }
+  },
+  "cwe_ids": [
+   "CWE-78"
+  ],
+  "comments": 1,
+  "cvss": {
+   "vector_string": null,
+   "score": null
+  }
+ },
+ {
+  "ghsa_id": "GHSA-66m2-gx93-v996",
+  "cve_id": "CVE-2025-59829",
+  "url": "https://api.github.com/repos/anthropics/claude-code/security-advisories/GHSA-66m2-gx93-v996",
+  "html_url": "https://github.com/anthropics/claude-code/security/advisories/GHSA-66m2-gx93-v996",
+  "summary": "Permission deny bypass through symlink",
+  "severity": "low",
+  "author": null,
+  "publisher": {
+   "login": "ddworken",
+   "id": 5304541,
+   "node_id": "MDQ6VXNlcjUzMDQ1NDE=",
+   "avatar_url": "https://avatars.githubusercontent.com/u/5304541?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/ddworken",
+   "html_url": "https://github.com/ddworken",
+   "followers_url": "https://api.github.com/users/ddworken/followers",
+   "following_url": "https://api.github.com/users/ddworken/following{/other_user}",
+   "gists_url": "https://api.github.com/users/ddworken/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/ddworken/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/ddworken/subscriptions",
+   "organizations_url": "https://api.github.com/users/ddworken/orgs",
+   "repos_url": "https://api.github.com/users/ddworken/repos",
+   "events_url": "https://api.github.com/users/ddworken/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/ddworken/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2025-10-03T04:36:40Z",
+  "published_at": "2025-10-03T04:36:40Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "vulnerabilities": [
+   {
+    "package": {
+     "ecosystem": "npm",
+     "name": "@anthropic-ai/claude-code"
+    },
+    "vulnerable_version_range": "< v1.0.120",
+    "patched_versions": "v1.0.120",
+    "vulnerable_functions": []
+   }
+  ],
+  "cvss_severities": {
+   "cvss_v3": {
+    "vector_string": null,
+    "score": null
+   },
+   "cvss_v4": {
+    "vector_string": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:P/VC:L/VI:L/VA:N/SC:N/SI:N/SA:N",
+    "score": 2.3
+   }
+  },
+  "cwe_ids": [
+   "CWE-61"
+  ],
+  "comments": 1,
+  "cvss": {
+   "vector_string": null,
+   "score": null
+  }
+ },
+ {
+  "ghsa_id": "GHSA-2jjv-qf24-vfm4",
+  "cve_id": "CVE-2025-59828",
+  "url": "https://api.github.com/repos/anthropics/claude-code/security-advisories/GHSA-2jjv-qf24-vfm4",
+  "html_url": "https://github.com/anthropics/claude-code/security/advisories/GHSA-2jjv-qf24-vfm4",
+  "summary": "Claude Code Vulnerable to Arbitrary Code Execution via Plugin Autoloading with Specific Yarn Versions",
+  "severity": "high",
+  "author": null,
+  "publisher": {
+   "login": "jenn-newton",
+   "id": 153535757,
+   "node_id": "U_kgDOCSbFDQ",
+   "avatar_url": "https://avatars.githubusercontent.com/u/153535757?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/jenn-newton",
+   "html_url": "https://github.com/jenn-newton",
+   "followers_url": "https://api.github.com/users/jenn-newton/followers",
+   "following_url": "https://api.github.com/users/jenn-newton/following{/other_user}",
+   "gists_url": "https://api.github.com/users/jenn-newton/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/jenn-newton/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/jenn-newton/subscriptions",
+   "organizations_url": "https://api.github.com/users/jenn-newton/orgs",
+   "repos_url": "https://api.github.com/users/jenn-newton/repos",
+   "events_url": "https://api.github.com/users/jenn-newton/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/jenn-newton/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2025-12-22T05:08:39Z",
+  "published_at": "2025-09-24T12:49:58Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "vulnerabilities": [
+   {
+    "package": {
+     "ecosystem": "npm",
+     "name": "@anthropic-ai/claude-code"
+    },
+    "vulnerable_version_range": "< v1.0.39",
+    "patched_versions": "v1.0.39",
+    "vulnerable_functions": []
+   }
+  ],
+  "cvss_severities": {
+   "cvss_v3": {
+    "vector_string": null,
+    "score": null
+   },
+   "cvss_v4": {
+    "vector_string": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:P/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N",
+    "score": 7.7
+   }
+  },
+  "cwe_ids": [],
+  "comments": 1,
+  "cvss": {
+   "vector_string": null,
+   "score": null
+  }
+ },
+ {
+  "ghsa_id": "GHSA-4fgq-fpq9-mr3g",
+  "cve_id": "CVE-2025-59536",
+  "url": "https://api.github.com/repos/anthropics/claude-code/security-advisories/GHSA-4fgq-fpq9-mr3g",
+  "html_url": "https://github.com/anthropics/claude-code/security/advisories/GHSA-4fgq-fpq9-mr3g",
+  "summary": "Command execution prior to Claude Code startup trust dialog ",
+  "severity": "high",
+  "author": null,
+  "publisher": {
+   "login": "ddworken",
+   "id": 5304541,
+   "node_id": "MDQ6VXNlcjUzMDQ1NDE=",
+   "avatar_url": "https://avatars.githubusercontent.com/u/5304541?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/ddworken",
+   "html_url": "https://github.com/ddworken",
+   "followers_url": "https://api.github.com/users/ddworken/followers",
+   "following_url": "https://api.github.com/users/ddworken/following{/other_user}",
+   "gists_url": "https://api.github.com/users/ddworken/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/ddworken/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/ddworken/subscriptions",
+   "organizations_url": "https://api.github.com/users/ddworken/orgs",
+   "repos_url": "https://api.github.com/users/ddworken/repos",
+   "events_url": "https://api.github.com/users/ddworken/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/ddworken/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2025-10-03T04:41:02Z",
+  "published_at": "2025-10-03T04:41:02Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "vulnerabilities": [
+   {
+    "package": {
+     "ecosystem": "npm",
+     "name": "@anthropic-ai/claude-code"
+    },
+    "vulnerable_version_range": "< v1.0.111",
+    "patched_versions": "v1.0.111",
+    "vulnerable_functions": []
+   }
+  ],
+  "cvss_severities": {
+   "cvss_v3": {
+    "vector_string": null,
+    "score": null
+   },
+   "cvss_v4": {
+    "vector_string": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:P/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N",
+    "score": 8.7
+   }
+  },
+  "cwe_ids": [
+   "CWE-94"
+  ],
+  "comments": 1,
+  "cvss": {
+   "vector_string": null,
+   "score": null
+  }
+ },
+ {
+  "ghsa_id": "GHSA-j4h9-wv2m-wrf7",
+  "cve_id": "CVE-2025-59041",
+  "url": "https://api.github.com/repos/anthropics/claude-code/security-advisories/GHSA-j4h9-wv2m-wrf7",
+  "html_url": "https://github.com/anthropics/claude-code/security/advisories/GHSA-j4h9-wv2m-wrf7",
+  "summary": "Claude Code vulnerable to arbitrary code execution caused by maliciously configured git email ",
+  "severity": "high",
+  "author": null,
+  "publisher": {
+   "login": "ddworken",
+   "id": 5304541,
+   "node_id": "MDQ6VXNlcjUzMDQ1NDE=",
+   "avatar_url": "https://avatars.githubusercontent.com/u/5304541?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/ddworken",
+   "html_url": "https://github.com/ddworken",
+   "followers_url": "https://api.github.com/users/ddworken/followers",
+   "following_url": "https://api.github.com/users/ddworken/following{/other_user}",
+   "gists_url": "https://api.github.com/users/ddworken/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/ddworken/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/ddworken/subscriptions",
+   "organizations_url": "https://api.github.com/users/ddworken/orgs",
+   "repos_url": "https://api.github.com/users/ddworken/repos",
+   "events_url": "https://api.github.com/users/ddworken/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/ddworken/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2025-09-09T23:58:39Z",
+  "published_at": "2025-09-09T23:58:39Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "vulnerabilities": [
+   {
+    "package": {
+     "ecosystem": "npm",
+     "name": "@anthropic-ai/claude-code"
+    },
+    "vulnerable_version_range": "<1.0.105",
+    "patched_versions": "1.0.105",
+    "vulnerable_functions": []
+   }
+  ],
+  "cvss_severities": {
+   "cvss_v3": {
+    "vector_string": null,
+    "score": null
+   },
+   "cvss_v4": {
+    "vector_string": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:P/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N",
+    "score": 8.7
+   }
+  },
+  "cwe_ids": [
+   "CWE-94"
+  ],
+  "comments": 1,
+  "cvss": {
+   "vector_string": null,
+   "score": null
+  }
+ },
+ {
+  "ghsa_id": "GHSA-qxfv-fcpc-w36x",
+  "cve_id": "CVE-2025-58764",
+  "url": "https://api.github.com/repos/anthropics/claude-code/security-advisories/GHSA-qxfv-fcpc-w36x",
+  "html_url": "https://github.com/anthropics/claude-code/security/advisories/GHSA-qxfv-fcpc-w36x",
+  "summary": "Command Injection in Claude Code rg command allowed bypass of user approval prompt for command execution",
+  "severity": "high",
+  "author": null,
+  "publisher": {
+   "login": "ddworken",
+   "id": 5304541,
+   "node_id": "MDQ6VXNlcjUzMDQ1NDE=",
+   "avatar_url": "https://avatars.githubusercontent.com/u/5304541?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/ddworken",
+   "html_url": "https://github.com/ddworken",
+   "followers_url": "https://api.github.com/users/ddworken/followers",
+   "following_url": "https://api.github.com/users/ddworken/following{/other_user}",
+   "gists_url": "https://api.github.com/users/ddworken/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/ddworken/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/ddworken/subscriptions",
+   "organizations_url": "https://api.github.com/users/ddworken/orgs",
+   "repos_url": "https://api.github.com/users/ddworken/repos",
+   "events_url": "https://api.github.com/users/ddworken/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/ddworken/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2025-09-09T23:58:42Z",
+  "published_at": "2025-09-09T23:58:42Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "vulnerabilities": [
+   {
+    "package": {
+     "ecosystem": "npm",
+     "name": "@anthropic-ai/claude-code"
+    },
+    "vulnerable_version_range": "<1.0.105",
+    "patched_versions": "1.0.105",
+    "vulnerable_functions": []
+   }
+  ],
+  "cvss_severities": {
+   "cvss_v3": {
+    "vector_string": null,
+    "score": null
+   },
+   "cvss_v4": {
+    "vector_string": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:P/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N",
+    "score": 8.7
+   }
+  },
+  "cwe_ids": [
+   "CWE-94"
+  ],
+  "comments": 1,
+  "cvss": {
+   "vector_string": null,
+   "score": null
+  }
+ },
+ {
+  "ghsa_id": "GHSA-ph6w-f82w-28w6",
+  "cve_id": null,
+  "url": "https://api.github.com/repos/anthropics/claude-code/security-advisories/GHSA-ph6w-f82w-28w6",
+  "html_url": "https://github.com/anthropics/claude-code/security/advisories/GHSA-ph6w-f82w-28w6",
+  "summary": "Claude Code Vulnerable to Arbitrary Code Execution Due to Insufficient Startup Warning",
+  "severity": "high",
+  "author": null,
+  "publisher": {
+   "login": "ddworken",
+   "id": 5304541,
+   "node_id": "MDQ6VXNlcjUzMDQ1NDE=",
+   "avatar_url": "https://avatars.githubusercontent.com/u/5304541?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/ddworken",
+   "html_url": "https://github.com/ddworken",
+   "followers_url": "https://api.github.com/users/ddworken/followers",
+   "following_url": "https://api.github.com/users/ddworken/following{/other_user}",
+   "gists_url": "https://api.github.com/users/ddworken/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/ddworken/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/ddworken/subscriptions",
+   "organizations_url": "https://api.github.com/users/ddworken/orgs",
+   "repos_url": "https://api.github.com/users/ddworken/repos",
+   "events_url": "https://api.github.com/users/ddworken/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/ddworken/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2025-09-02T21:21:00Z",
+  "published_at": "2025-09-02T21:21:00Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "vulnerabilities": [
+   {
+    "package": {
+     "ecosystem": "npm",
+     "name": "@anthropic-ai/claude-code"
+    },
+    "vulnerable_version_range": "< v1.0.87",
+    "patched_versions": "v1.0.87",
+    "vulnerable_functions": []
+   }
+  ],
+  "cvss_severities": {
+   "cvss_v3": {
+    "vector_string": null,
+    "score": null
+   },
+   "cvss_v4": {
+    "vector_string": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:P/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N",
+    "score": 8.7
+   }
+  },
+  "cwe_ids": [
+   "CWE-94"
+  ],
+  "comments": 1,
+  "cvss": {
+   "vector_string": null,
+   "score": null
+  }
+ },
+ {
+  "ghsa_id": "GHSA-x5gv-jw7f-j6xj",
+  "cve_id": "CVE-2025-55284",
+  "url": "https://api.github.com/repos/anthropics/claude-code/security-advisories/GHSA-x5gv-jw7f-j6xj",
+  "html_url": "https://github.com/anthropics/claude-code/security/advisories/GHSA-x5gv-jw7f-j6xj",
+  "summary": "Permissive Default Allowlist Enables Unauthorized File Read and Network Exfiltration in Claude Code",
+  "severity": "high",
+  "author": null,
+  "publisher": {
+   "login": "jenn-newton",
+   "id": 153535757,
+   "node_id": "U_kgDOCSbFDQ",
+   "avatar_url": "https://avatars.githubusercontent.com/u/153535757?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/jenn-newton",
+   "html_url": "https://github.com/jenn-newton",
+   "followers_url": "https://api.github.com/users/jenn-newton/followers",
+   "following_url": "https://api.github.com/users/jenn-newton/following{/other_user}",
+   "gists_url": "https://api.github.com/users/jenn-newton/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/jenn-newton/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/jenn-newton/subscriptions",
+   "organizations_url": "https://api.github.com/users/jenn-newton/orgs",
+   "repos_url": "https://api.github.com/users/jenn-newton/repos",
+   "events_url": "https://api.github.com/users/jenn-newton/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/jenn-newton/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2025-08-15T21:36:43Z",
+  "published_at": "2025-08-15T21:36:43Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "vulnerabilities": [
+   {
+    "package": {
+     "ecosystem": "npm",
+     "name": "@anthropic-ai/claude-code"
+    },
+    "vulnerable_version_range": "< v1.0.4",
+    "patched_versions": "v1.0.4",
+    "vulnerable_functions": []
+   }
+  ],
+  "cvss_severities": {
+   "cvss_v3": {
+    "vector_string": null,
+    "score": null
+   },
+   "cvss_v4": {
+    "vector_string": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:P/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N",
+    "score": 7.1
+   }
+  },
+  "cwe_ids": [
+   "CWE-78"
+  ],
+  "comments": 1,
+  "cvss": {
+   "vector_string": null,
+   "score": null
+  }
+ },
+ {
+  "ghsa_id": "GHSA-x56v-x2h6-7j34",
+  "cve_id": "CVE-2025-54795",
+  "url": "https://api.github.com/repos/anthropics/claude-code/security-advisories/GHSA-x56v-x2h6-7j34",
+  "html_url": "https://github.com/anthropics/claude-code/security/advisories/GHSA-x56v-x2h6-7j34",
+  "summary": "Command Injection in Claude Code echo command allowed bypass of user approval prompt for command execution",
+  "severity": "high",
+  "author": null,
+  "publisher": {
+   "login": "jenn-newton",
+   "id": 153535757,
+   "node_id": "U_kgDOCSbFDQ",
+   "avatar_url": "https://avatars.githubusercontent.com/u/153535757?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/jenn-newton",
+   "html_url": "https://github.com/jenn-newton",
+   "followers_url": "https://api.github.com/users/jenn-newton/followers",
+   "following_url": "https://api.github.com/users/jenn-newton/following{/other_user}",
+   "gists_url": "https://api.github.com/users/jenn-newton/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/jenn-newton/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/jenn-newton/subscriptions",
+   "organizations_url": "https://api.github.com/users/jenn-newton/orgs",
+   "repos_url": "https://api.github.com/users/jenn-newton/repos",
+   "events_url": "https://api.github.com/users/jenn-newton/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/jenn-newton/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2025-08-01T23:38:23Z",
+  "published_at": "2025-08-01T23:38:23Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "vulnerabilities": [
+   {
+    "package": {
+     "ecosystem": "npm",
+     "name": "@anthropic-ai/claude-code"
+    },
+    "vulnerable_version_range": "< v1.0.20",
+    "patched_versions": "v1.0.20",
+    "vulnerable_functions": []
+   }
+  ],
+  "cvss_severities": {
+   "cvss_v3": {
+    "vector_string": null,
+    "score": null
+   },
+   "cvss_v4": {
+    "vector_string": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:P/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N",
+    "score": 8.7
+   }
+  },
+  "cwe_ids": [
+   "CWE-78"
+  ],
+  "comments": 1,
+  "cvss": {
+   "vector_string": null,
+   "score": null
+  }
+ },
+ {
+  "ghsa_id": "GHSA-pmw4-pwvc-3hx2",
+  "cve_id": "CVE-2025-54794",
+  "url": "https://api.github.com/repos/anthropics/claude-code/security-advisories/GHSA-pmw4-pwvc-3hx2",
+  "html_url": "https://github.com/anthropics/claude-code/security/advisories/GHSA-pmw4-pwvc-3hx2",
+  "summary": "Path Restriction Bypass in Claude Code Research Preview could allow unauthorized file access when path prefixes collide",
+  "severity": "high",
+  "author": null,
+  "publisher": {
+   "login": "jenn-newton",
+   "id": 153535757,
+   "node_id": "U_kgDOCSbFDQ",
+   "avatar_url": "https://avatars.githubusercontent.com/u/153535757?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/jenn-newton",
+   "html_url": "https://github.com/jenn-newton",
+   "followers_url": "https://api.github.com/users/jenn-newton/followers",
+   "following_url": "https://api.github.com/users/jenn-newton/following{/other_user}",
+   "gists_url": "https://api.github.com/users/jenn-newton/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/jenn-newton/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/jenn-newton/subscriptions",
+   "organizations_url": "https://api.github.com/users/jenn-newton/orgs",
+   "repos_url": "https://api.github.com/users/jenn-newton/repos",
+   "events_url": "https://api.github.com/users/jenn-newton/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/jenn-newton/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2025-08-01T23:38:37Z",
+  "published_at": "2025-08-01T23:38:37Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "vulnerabilities": [
+   {
+    "package": {
+     "ecosystem": "npm",
+     "name": "@anthropic-ai/claude-code"
+    },
+    "vulnerable_version_range": "< v0.2.111",
+    "patched_versions": "v0.2.111",
+    "vulnerable_functions": []
+   }
+  ],
+  "cvss_severities": {
+   "cvss_v3": {
+    "vector_string": null,
+    "score": null
+   },
+   "cvss_v4": {
+    "vector_string": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:P/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N",
+    "score": 7.7
+   }
+  },
+  "cwe_ids": [
+   "CWE-22"
+  ],
+  "comments": 1,
+  "cvss": {
+   "vector_string": null,
+   "score": null
+  }
+ },
+ {
+  "ghsa_id": "GHSA-9f65-56v6-gxw7",
+  "cve_id": "CVE-2025-52882",
+  "url": "https://api.github.com/repos/anthropics/claude-code/security-advisories/GHSA-9f65-56v6-gxw7",
+  "html_url": "https://github.com/anthropics/claude-code/security/advisories/GHSA-9f65-56v6-gxw7",
+  "summary": "Claude Code IDE extensions allow websocket connections from arbitrary origins",
+  "severity": "high",
+  "author": null,
+  "publisher": {
+   "login": "petery-ant",
+   "id": 173851638,
+   "node_id": "U_kgDOClzD9g",
+   "avatar_url": "https://avatars.githubusercontent.com/u/173851638?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/petery-ant",
+   "html_url": "https://github.com/petery-ant",
+   "followers_url": "https://api.github.com/users/petery-ant/followers",
+   "following_url": "https://api.github.com/users/petery-ant/following{/other_user}",
+   "gists_url": "https://api.github.com/users/petery-ant/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/petery-ant/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/petery-ant/subscriptions",
+   "organizations_url": "https://api.github.com/users/petery-ant/orgs",
+   "repos_url": "https://api.github.com/users/petery-ant/repos",
+   "events_url": "https://api.github.com/users/petery-ant/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/petery-ant/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2025-06-24T04:02:59Z",
+  "published_at": "2025-06-23T15:00:37Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "vulnerabilities": [
+   {
+    "package": {
+     "ecosystem": "npm",
+     "name": "@anthropic-ai/claude-code"
+    },
+    "vulnerable_version_range": "> 0.2.116 < 1.0.24",
+    "patched_versions": "1.0.24 and above",
+    "vulnerable_functions": []
+   },
+   {
+    "package": {
+     "ecosystem": "vscode",
+     "name": "Claude Code for VSCode"
+    },
+    "vulnerable_version_range": "> 0.2.116 < 1.0.24",
+    "patched_versions": "1.0.24 and above",
+    "vulnerable_functions": []
+   },
+   {
+    "package": {
+     "ecosystem": "jetbrains",
+     "name": "Claude Code [Beta]"
+    },
+    "vulnerable_version_range": "> 0.1.1 [Beta] < 0.1.9 [Beta]",
+    "patched_versions": " 0.1.9 [Beta] and above",
+    "vulnerable_functions": []
+   }
+  ],
+  "cvss_severities": {
+   "cvss_v3": {
+    "vector_string": null,
+    "score": null
+   },
+   "cvss_v4": {
+    "vector_string": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:P/VC:H/VI:H/VA:N/SC:H/SI:H/SA:N",
+    "score": 8.8
+   }
+  },
+  "cwe_ids": [],
+  "comments": 1,
+  "cvss": {
+   "vector_string": null,
+   "score": null
+  }
+ }
+]

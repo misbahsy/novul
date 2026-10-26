@@ -1,0 +1,206 @@
+{
+ "findings": [
+  {
+   "formula": "shaderc",
+   "version": "2026.4",
+   "tag": "v2026.4",
+   "repo_url": "https://github.com/google/shaderc",
+   "vulnerabilities": [
+    {
+     "id": "OSV-2026-1069",
+     "severity": "UNKNOWN",
+     "summary": "Segv on unknown address in glslang::TPpContext::tokenPaste",
+     "aliases": [],
+     "fixed_versions": [
+      "5bcaaaec711df4dfa31f38923d3d42b9b98d5250"
+     ]
+    }
+   ],
+   "patched": []
+  },
+  {
+   "formula": "simdjson",
+   "version": "4.2.4",
+   "tag": "v4.2.4",
+   "repo_url": "https://github.com/simdjson/simdjson",
+   "vulnerabilities": [
+    {
+     "id": "CVE-2026-8295",
+     "severity": "UNKNOWN",
+     "summary": "Integer overflow in simdjson",
+     "aliases": [],
+     "fixed_versions": [
+      "1bcf71bd85059ab6574ea1159de9298dcc1212c5"
+     ]
+    },
+    {
+     "id": "CVE-2026-88358",
+     "severity": "MEDIUM",
+     "summary": null,
+     "aliases": [],
+     "fixed_versions": [
+      "20b28712ffce8320237b75a587d35a2e89140577"
+     ]
+    }
+   ],
+   "patched": []
+  },
+  {
+   "formula": "gh",
+   "version": "2.86.0",
+   "tag": "v2.86.0",
+   "repo_url": "https://github.com/cli/cli",
+   "vulnerabilities": [
+    {
+     "id": "CVE-2026-45803",
+     "severity": "LOW",
+     "summary": "gh: GitHub Actions log output in `gh run view` allows terminal escape sequence injection",
+     "aliases": [
+      "GHSA-crc3-h8v6-qh57",
+      "GO-2026-5335"
+     ],
+     "fixed_versions": [
+      "6c470f60803784e1558b626022677c53dccb6016"
+     ]
+    },
+    {
+     "id": "CVE-2026-48501",
+     "severity": "HIGH",
+     "summary": "GitHub CLI tokens leak via `gh attestation` commands",
+     "aliases": [
+      "GHSA-8xvp-7hj6-mcj9",
+      "GO-2026-5271"
+     ],
+     "fixed_versions": [
+      "f96972ce1c11fdb8eaa556257fde962a363dffde"
+     ]
+    },
+    {
+     "id": "CVE-2026-59831",
+     "severity": "MEDIUM",
+     "summary": "GitHub CLI `gh codespace jupyter` could allow remote code execution when connecting to a malicious Codespace",
+     "aliases": [
+      "GHSA-8cg3-r6g9-fpg2"
+     ],
+     "fixed_versions": [
+      "b300f2ec7ec9dc9addc39b2ad88c54097ded7ca0"
+     ]
+    },
+    {
+     "id": "CVE-2026-64652",
+     "severity": "LOW",
+     "summary": "GitHub CLI: Partial token disclosure in `gh auth status` output",
+     "aliases": [
+      "GHSA-cg6r-mpgc-h9mm",
+      "GO-2026-6766"
+     ],
+     "fixed_versions": [
+      "55dbb4dc6b7edb10b48e3d7fc5bccd32318d1b55",
+      "3f6a16a9f8c7fe9676aa8d8f47b399310dd231c3"
+     ]
+    }
+   ],
+   "patched": []
+  },
+  {
+   "formula": "libssh2",
+   "version": "1.11.1",
+   "tag": "1.11.1",
+   "repo_url": "https://github.com/libssh2/libssh2",
+   "vulnerabilities": [
+    {
+     "id": "OSV-2025-433",
+     "severity": "UNKNOWN",
+     "summary": "Null-dereference READ in _libssh2_packet_add",
+     "aliases": [],
+     "fixed_versions": []
+    }
+   ],
+   "patched": [
+    {
+     "id": "CVE-2025-15661",
+     "severity": "UNKNOWN",
+     "summary": "libssh2 - Heap Buffer Over-read via sftp_symlink() in sftp.c",
+     "aliases": [],
+     "fixed_versions": [
+      "2dae3024897e1898d389835151f4e9606227721d"
+     ]
+    },
+    {
+     "id": "CVE-2026-55199",
+     "severity": "UNKNOWN",
+     "summary": "libssh2 - Pre-Authentication DoS via SSH_MSG_EXT_INFO Handler",
+     "aliases": [],
+     "fixed_versions": [
+      "17626857d20b3c9a1addfa45979dadcee1cd84a4"
+     ]
+    }
+   ]
+  },
+  {
+   "formula": "node",
+   "version": "25.6.1",
+   "tag": "25.6.1",
+   "repo_url": "https://github.com/nodejs/node",
+   "vulnerabilities": [
+    {
+     "id": "CVE-2026-21710",
+     "severity": "HIGH",
+     "summary": null,
+     "aliases": [
+      "BIT-node-2026-21710",
+      "BIT-node-min-2026-21710"
+     ],
+     "fixed_versions": []
+    },
+    {
+     "id": "CVE-2026-21711",
+     "severity": "MEDIUM",
+     "summary": null,
+     "aliases": [
+      "BIT-node-2026-21711",
+      "BIT-node-min-2026-21711"
+     ],
+     "fixed_versions": [
+      "e7618fb5a5fc25d76b6474e2a6607f04fd6f10e0"
+     ]
+    },
+    {
+     "id": "CVE-2026-21712",
+     "severity": "MEDIUM",
+     "summary": null,
+     "aliases": [
+      "BIT-node-2026-21712",
+      "BIT-node-min-2026-21712"
+     ],
+     "fixed_versions": []
+    },
+    {
+     "id": "CVE-2026-21713",
+     "severity": "MEDIUM",
+     "summary": null,
+     "aliases": [
+      "BIT-node-2026-21713",
+      "BIT-node-min-2026-21713"
+     ],
+     "fixed_versions": []
+    }
+   ],
+   "patched": []
+  }
+ ],
+ "skipped_formulae": [
+  "lame",
+  "libtiff",
+  "aribb24"
+ ],
+ "checked": 129,
+ "complete": false,
+ "outdated_without_sbom": [],
+ "unscanned_formulae": {
+  "cc-bridge": "untrusted_tap",
+  "gogcli": "untrusted_tap",
+  "bun": "untrusted_tap",
+  "sshpass": "untrusted_tap"
+ }
+}

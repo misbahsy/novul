@@ -1,0 +1,199 @@
+[
+ {
+  "ghsa_id": "GHSA-632h-h47v-g4x4",
+  "cve_id": null,
+  "url": "https://api.github.com/repos/anomalyco/opencode/security-advisories/GHSA-632h-h47v-g4x4",
+  "html_url": "https://github.com/anomalyco/opencode/security/advisories/GHSA-632h-h47v-g4x4",
+  "summary": "Cross-site OpenCode server upgrade request can install arbitrary packages for npm-based installations",
+  "severity": "high",
+  "author": null,
+  "publisher": {
+   "login": "rekram1-node",
+   "id": 63023139,
+   "node_id": "MDQ6VXNlcjYzMDIzMTM5",
+   "avatar_url": "https://avatars.githubusercontent.com/u/63023139?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/rekram1-node",
+   "html_url": "https://github.com/rekram1-node",
+   "followers_url": "https://api.github.com/users/rekram1-node/followers",
+   "following_url": "https://api.github.com/users/rekram1-node/following{/other_user}",
+   "gists_url": "https://api.github.com/users/rekram1-node/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/rekram1-node/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/rekram1-node/subscriptions",
+   "organizations_url": "https://api.github.com/users/rekram1-node/orgs",
+   "repos_url": "https://api.github.com/users/rekram1-node/repos",
+   "events_url": "https://api.github.com/users/rekram1-node/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/rekram1-node/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2026-09-24T13:36:45Z",
+  "published_at": "2026-09-24T13:36:45Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "vulnerabilities": [
+   {
+    "package": {
+     "ecosystem": "npm",
+     "name": "opencode-ai"
+    },
+    "vulnerable_version_range": ">=1.14.30",
+    "patched_versions": "1.18.22",
+    "vulnerable_functions": []
+   }
+  ],
+  "cvss_severities": {
+   "cvss_v3": {
+    "vector_string": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H",
+    "score": 7.5
+   },
+   "cvss_v4": {
+    "vector_string": null,
+    "score": null
+   }
+  },
+  "cwe_ids": [
+   "CWE-346",
+   "CWE-352",
+   "CWE-436"
+  ],
+  "comments": 0,
+  "cvss": {
+   "vector_string": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H",
+   "score": 7.5
+  }
+ },
+ {
+  "ghsa_id": "GHSA-c83v-7274-4vgp",
+  "cve_id": "CVE-2026-22813",
+  "url": "https://api.github.com/repos/anomalyco/opencode/security-advisories/GHSA-c83v-7274-4vgp",
+  "html_url": "https://github.com/anomalyco/opencode/security/advisories/GHSA-c83v-7274-4vgp",
+  "summary": "Malicious website can execute commands on the local system through XSS in the OpenCode web UI",
+  "severity": "critical",
+  "author": null,
+  "publisher": {
+   "login": "thdxr",
+   "id": 826656,
+   "node_id": "MDQ6VXNlcjgyNjY1Ng==",
+   "avatar_url": "https://avatars.githubusercontent.com/u/826656?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/thdxr",
+   "html_url": "https://github.com/thdxr",
+   "followers_url": "https://api.github.com/users/thdxr/followers",
+   "following_url": "https://api.github.com/users/thdxr/following{/other_user}",
+   "gists_url": "https://api.github.com/users/thdxr/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/thdxr/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/thdxr/subscriptions",
+   "organizations_url": "https://api.github.com/users/thdxr/orgs",
+   "repos_url": "https://api.github.com/users/thdxr/repos",
+   "events_url": "https://api.github.com/users/thdxr/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/thdxr/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2026-01-12T21:33:11Z",
+  "published_at": "2026-01-12T21:32:40Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "vulnerabilities": [
+   {
+    "package": {
+     "ecosystem": "",
+     "name": "opencode"
+    },
+    "vulnerable_version_range": "<1.1.10",
+    "patched_versions": "1.1.10",
+    "vulnerable_functions": []
+   }
+  ],
+  "cvss_severities": {
+   "cvss_v3": {
+    "vector_string": null,
+    "score": null
+   },
+   "cvss_v4": {
+    "vector_string": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:P/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H",
+    "score": 9.4
+   }
+  },
+  "cwe_ids": [],
+  "comments": 1,
+  "cvss": {
+   "vector_string": null,
+   "score": null
+  }
+ },
+ {
+  "ghsa_id": "GHSA-vxw4-wv6m-9hhh",
+  "cve_id": "CVE-2026-22812",
+  "url": "https://api.github.com/repos/anomalyco/opencode/security-advisories/GHSA-vxw4-wv6m-9hhh",
+  "html_url": "https://github.com/anomalyco/opencode/security/advisories/GHSA-vxw4-wv6m-9hhh",
+  "summary": "Unauthenticated HTTP Server Allows Arbitrary Command Execution",
+  "severity": "high",
+  "author": null,
+  "publisher": {
+   "login": "thdxr",
+   "id": 826656,
+   "node_id": "MDQ6VXNlcjgyNjY1Ng==",
+   "avatar_url": "https://avatars.githubusercontent.com/u/826656?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/thdxr",
+   "html_url": "https://github.com/thdxr",
+   "followers_url": "https://api.github.com/users/thdxr/followers",
+   "following_url": "https://api.github.com/users/thdxr/following{/other_user}",
+   "gists_url": "https://api.github.com/users/thdxr/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/thdxr/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/thdxr/subscriptions",
+   "organizations_url": "https://api.github.com/users/thdxr/orgs",
+   "repos_url": "https://api.github.com/users/thdxr/repos",
+   "events_url": "https://api.github.com/users/thdxr/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/thdxr/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2026-01-12T21:31:16Z",
+  "published_at": "2026-01-12T19:43:04Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "vulnerabilities": [
+   {
+    "package": {
+     "ecosystem": "npm",
+     "name": "opencode-ai"
+    },
+    "vulnerable_version_range": "< 1.0.216",
+    "patched_versions": "1.0.216",
+    "vulnerable_functions": []
+   }
+  ],
+  "cvss_severities": {
+   "cvss_v3": {
+    "vector_string": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+    "score": 8.8
+   },
+   "cvss_v4": {
+    "vector_string": null,
+    "score": null
+   }
+  },
+  "cwe_ids": [
+   "CWE-306",
+   "CWE-749",
+   "CWE-942"
+  ],
+  "comments": 3,
+  "cvss": {
+   "vector_string": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+   "score": 8.8
+  }
+ }
+]

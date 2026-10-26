@@ -1,0 +1,68 @@
+NoVul
+Copyright 2026 Menlo Park Lab Corp.
+
+Licensed under the Apache License, Version 2.0 (see LICENSE).
+
+NoVul bundles the two command-line tools below unmodified, and reads public vulnerability data
+from the sources listed after them. Libraries compiled into the app are listed in
+THIRD_PARTY_LICENSES.md.
+
+-------------------------------------------------------------------------------
+Bundled tools
+-------------------------------------------------------------------------------
+
+osv-scanner v2.7.0
+https://github.com/google/osv-scanner
+Copyright Google LLC. Licensed under the Apache License, Version 2.0 (same text as LICENSE).
+
+gitleaks v8.30.1
+https://github.com/gitleaks/gitleaks
+Licensed under the MIT License:
+
+    MIT License
+
+    Copyright (c) 2019 Zachary Rice
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-------------------------------------------------------------------------------
+Data sources
+-------------------------------------------------------------------------------
+
+OSV.dev (https://osv.dev): vulnerability advisories, queried with package names and versions.
+OSV aggregates databases that keep their own licenses, including the GitHub Advisory Database
+(CC BY 4.0), the Python Packaging Advisory Database (CC BY 4.0), the Go Vulnerability Database
+(CC BY 4.0) and the RustSec Advisory Database (CC0 1.0). osv-scanner may also query deps.dev
+(https://deps.dev) to resolve versions in requirements.txt files.
+
+CISA Known Exploited Vulnerabilities Catalog (https://www.cisa.gov/known-exploited-vulnerabilities-catalog):
+which vulnerabilities are being exploited in the wild.
+
+EPSS, Exploit Prediction Scoring System, by FIRST (https://www.first.org/epss): the probability
+that a vulnerability is exploited in the next 30 days.
+
+Have I Been Pwned (https://haveibeenpwned.com): list of publicly known data breaches, used to flag
+keys for services that had a recent breach. Licensed under Creative Commons Attribution 4.0
+International (CC BY 4.0).
+
+endoflife.date (https://endoflife.date): release and end-of-life dates for language runtimes.
+Data licensed under the MIT License.
+
+GitHub repository security advisories (https://docs.github.com/rest/security-advisories): advisories
+for installed AI coding tools.

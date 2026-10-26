@@ -1,0 +1,255 @@
+[
+ {
+  "ghsa_id": "GHSA-cf8x-9m69-3gg3",
+  "cve_id": null,
+  "url": "https://api.github.com/repos/oven-sh/bun/security-advisories/GHSA-cf8x-9m69-3gg3",
+  "html_url": "https://github.com/oven-sh/bun/security/advisories/GHSA-cf8x-9m69-3gg3",
+  "summary": "HTTP/3 QPACK amplification allows remote memory exhaustion and CPU stall",
+  "severity": "high",
+  "author": null,
+  "publisher": {
+   "login": "alii",
+   "id": 25351731,
+   "node_id": "MDQ6VXNlcjI1MzUxNzMx",
+   "avatar_url": "https://avatars.githubusercontent.com/u/25351731?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/alii",
+   "html_url": "https://github.com/alii",
+   "followers_url": "https://api.github.com/users/alii/followers",
+   "following_url": "https://api.github.com/users/alii/following{/other_user}",
+   "gists_url": "https://api.github.com/users/alii/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/alii/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/alii/subscriptions",
+   "organizations_url": "https://api.github.com/users/alii/orgs",
+   "repos_url": "https://api.github.com/users/alii/repos",
+   "events_url": "https://api.github.com/users/alii/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/alii/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "identifiers": [
+   {
+    "value": "GHSA-cf8x-9m69-3gg3",
+    "type": "GHSA"
+   }
+  ],
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2026-10-24T00:13:31Z",
+  "published_at": "2026-10-24T00:13:31Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "submission": null,
+  "vulnerabilities": [
+   {
+    "package": {
+     "ecosystem": "npm",
+     "name": "bun"
+    },
+    "vulnerable_version_range": ">= 1.3.14, < 1.4.4",
+    "patched_versions": "1.4.4",
+    "vulnerable_functions": []
+   }
+  ],
+  "cvss_severities": {
+   "cvss_v3": {
+    "vector_string": null,
+    "score": null
+   },
+   "cvss_v4": {
+    "vector_string": null,
+    "score": null
+   }
+  },
+  "cwes": [
+   {
+    "cwe_id": "CWE-770",
+    "name": "Allocation of Resources Without Limits or Throttling"
+   }
+  ],
+  "cwe_ids": [
+   "CWE-770"
+  ],
+  "credits": [],
+  "credits_detailed": [],
+  "collaborating_users": null,
+  "collaborating_teams": null,
+  "private_fork": null,
+  "comments": 0,
+  "cvss": {
+   "vector_string": null,
+   "score": null
+  }
+ },
+ {
+  "ghsa_id": "GHSA-663w-cv8g-jj2p",
+  "cve_id": "CVE-2026-111497",
+  "url": "https://api.github.com/repos/oven-sh/bun/security-advisories/GHSA-663w-cv8g-jj2p",
+  "html_url": "https://github.com/oven-sh/bun/security/advisories/GHSA-663w-cv8g-jj2p",
+  "summary": "Bundled brotli decoder has an out-of-bounds write (CVE-2026-111497)",
+  "severity": "high",
+  "author": null,
+  "publisher": {
+   "login": "alii",
+   "id": 25351731,
+   "node_id": "MDQ6VXNlcjI1MzUxNzMx",
+   "avatar_url": "https://avatars.githubusercontent.com/u/25351731?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/alii",
+   "html_url": "https://github.com/alii",
+   "followers_url": "https://api.github.com/users/alii/followers",
+   "following_url": "https://api.github.com/users/alii/following{/other_user}",
+   "gists_url": "https://api.github.com/users/alii/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/alii/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/alii/subscriptions",
+   "organizations_url": "https://api.github.com/users/alii/orgs",
+   "repos_url": "https://api.github.com/users/alii/repos",
+   "events_url": "https://api.github.com/users/alii/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/alii/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "identifiers": [
+   {
+    "value": "GHSA-663w-cv8g-jj2p",
+    "type": "GHSA"
+   },
+   {
+    "value": "CVE-2026-111497",
+    "type": "CVE"
+   }
+  ],
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2026-10-23T09:31:05Z",
+  "published_at": "2026-10-23T09:31:05Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "submission": null,
+  "vulnerabilities": [
+   {
+    "package": {
+     "ecosystem": "npm",
+     "name": "bun"
+    },
+    "vulnerable_version_range": ">= 1.0.21, < 1.4.4",
+    "patched_versions": "1.4.4",
+    "vulnerable_functions": []
+   }
+  ],
+  "cvss_severities": {
+   "cvss_v3": {
+    "vector_string": null,
+    "score": null
+   },
+   "cvss_v4": {
+    "vector_string": null,
+    "score": null
+   }
+  },
+  "cwes": [
+   {
+    "cwe_id": "CWE-787",
+    "name": "Out-of-bounds Write"
+   }
+  ],
+  "cwe_ids": [
+   "CWE-787"
+  ],
+  "credits": [],
+  "credits_detailed": [],
+  "collaborating_users": null,
+  "collaborating_teams": null,
+  "private_fork": null,
+  "comments": 0,
+  "cvss": {
+   "vector_string": null,
+   "score": null
+  }
+ },
+ {
+  "ghsa_id": "GHSA-26q8-h657-pf84",
+  "cve_id": null,
+  "url": "https://api.github.com/repos/oven-sh/bun/security-advisories/GHSA-26q8-h657-pf84",
+  "html_url": "https://github.com/oven-sh/bun/security/advisories/GHSA-26q8-h657-pf84",
+  "summary": "Bundled root certificates trust compromised eMudhra (emSign) intermediate CAs",
+  "severity": "high",
+  "author": null,
+  "publisher": {
+   "login": "alii",
+   "id": 25351731,
+   "node_id": "MDQ6VXNlcjI1MzUxNzMx",
+   "avatar_url": "https://avatars.githubusercontent.com/u/25351731?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/alii",
+   "html_url": "https://github.com/alii",
+   "followers_url": "https://api.github.com/users/alii/followers",
+   "following_url": "https://api.github.com/users/alii/following{/other_user}",
+   "gists_url": "https://api.github.com/users/alii/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/alii/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/alii/subscriptions",
+   "organizations_url": "https://api.github.com/users/alii/orgs",
+   "repos_url": "https://api.github.com/users/alii/repos",
+   "events_url": "https://api.github.com/users/alii/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/alii/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "identifiers": [
+   {
+    "value": "GHSA-26q8-h657-pf84",
+    "type": "GHSA"
+   }
+  ],
+  "state": "published",
+  "created_at": null,
+  "updated_at": "2026-10-23T02:02:06Z",
+  "published_at": "2026-10-23T02:02:06Z",
+  "closed_at": null,
+  "withdrawn_at": null,
+  "submission": null,
+  "vulnerabilities": [
+   {
+    "package": {
+     "ecosystem": "npm",
+     "name": "bun"
+    },
+    "vulnerable_version_range": "< 1.4.4",
+    "patched_versions": "1.4.4",
+    "vulnerable_functions": []
+   }
+  ],
+  "cvss_severities": {
+   "cvss_v3": {
+    "vector_string": null,
+    "score": null
+   },
+   "cvss_v4": {
+    "vector_string": null,
+    "score": null
+   }
+  },
+  "cwes": [
+   {
+    "cwe_id": "CWE-295",
+    "name": "Improper Certificate Validation"
+   }
+  ],
+  "cwe_ids": [
+   "CWE-295"
+  ],
+  "credits": [],
+  "credits_detailed": [],
+  "collaborating_users": null,
+  "collaborating_teams": null,
+  "private_fork": null,
+  "comments": 0,
+  "cvss": {
+   "vector_string": null,
+   "score": null
+  }
+ }
+]

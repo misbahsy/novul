@@ -1,0 +1,95 @@
+{
+ "schema_version": "1.2.1",
+ "generated_at": "2026-10-26T00:08:30+00:00",
+ "last_modified": "2026-10-22T00:08:27+00:00",
+ "result": {
+  "name": "nodejs",
+  "label": "Node.js",
+  "releases": [
+   {
+    "name": "26",
+    "codename": null,
+    "label": "26 (Upcoming LTS)",
+    "releaseDate": "2026-05-05",
+    "isLts": false,
+    "ltsFrom": "2026-10-28",
+    "isEoas": false,
+    "eoasFrom": "2027-10-27",
+    "isEol": false,
+    "eolFrom": "2029-04-30",
+    "isEoes": null,
+    "eoesFrom": null,
+    "isMaintained": true,
+    "latest": {
+     "name": "26.12.1",
+     "date": "2026-10-21",
+     "link": "https://github.com/nodejs/node/blob/main/doc/changelogs/CHANGELOG_V26.md#26.12.1"
+    },
+    "custom": null
+   },
+   {
+    "name": "25",
+    "codename": null,
+    "label": "25",
+    "releaseDate": "2025-10-15",
+    "isLts": false,
+    "ltsFrom": null,
+    "isEoas": true,
+    "eoasFrom": "2026-04-01",
+    "isEol": true,
+    "eolFrom": "2026-06-01",
+    "isEoes": null,
+    "eoesFrom": null,
+    "isMaintained": false,
+    "latest": {
+     "name": "25.9.0",
+     "date": "2026-04-01",
+     "link": "https://github.com/nodejs/node/blob/main/doc/changelogs/CHANGELOG_V25.md#25.9.0"
+    },
+    "custom": null
+   },
+   {
+    "name": "24",
+    "codename": null,
+    "label": "24 (LTS)",
+    "releaseDate": "2025-05-06",
+    "isLts": true,
+    "ltsFrom": "2025-10-28",
+    "isEoas": true,
+    "eoasFrom": "2026-10-20",
+    "isEol": false,
+    "eolFrom": "2028-04-30",
+    "isEoes": null,
+    "eoesFrom": null,
+    "isMaintained": true,
+    "latest": {
+     "name": "24.22.1",
+     "date": "2026-10-21",
+     "link": "https://github.com/nodejs/node/blob/main/doc/changelogs/CHANGELOG_V24.md#24.22.1"
+    },
+    "custom": null
+   },
+   {
+    "name": "20",
+    "codename": null,
+    "label": "20 (LTS)",
+    "releaseDate": "2023-04-18",
+    "isLts": true,
+    "ltsFrom": "2023-10-24",
+    "isEoas": true,
+    "eoasFrom": "2024-10-22",
+    "isEol": true,
+    "eolFrom": "2026-04-30",
+    "isEoes": false,
+    "eoesFrom": null,
+    "isMaintained": true,
+    "latest": {
+     "name": "20.20.2",
+     "date": "2026-03-24",
+     "link": "https://github.com/nodejs/node/blob/main/doc/changelogs/CHANGELOG_V20.md#20.20.2"
+    },
+    "custom": null
+   }
+  ]
+ }
+}

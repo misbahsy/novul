@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1a2138"/><stop offset="1" stop-color="#0e1220"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#3ee6c4" stop-opacity="0.22"/><stop offset="1" stop-color="#3ee6c4" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="sweep" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="330" y2="-330">
+      <stop offset="0" stop-color="#3ee6c4" stop-opacity="0"/><stop offset="1" stop-color="#3ee6c4" stop-opacity="0.55"/>
+    </linearGradient>
+    <clipPath id="tile"><rect x="64" y="64" width="896" height="896" rx="200"/></clipPath>
+  </defs>
+  <rect x="64" y="64" width="896" height="896" rx="200" fill="url(#bg)"/>
+  <g clip-path="url(#tile)"><g transform="translate(512 512)">
+    <circle r="440" fill="url(#glow)"/>
+    <g fill="none" stroke="#3ee6c4" stroke-opacity="0.28" stroke-width="8">
+      <circle r="380"/><circle r="270"/><circle r="160"/>
+    </g>
+    <path d="M0 0 L380 0 A380 380 0 0 0 268.7 -268.7 Z" fill="url(#sweep)" transform="rotate(-6)"/>
+    <line x1="0" y1="0" x2="380" y2="0" stroke="#3ee6c4" stroke-width="10" stroke-linecap="round" transform="rotate(-51)"/>
+    <circle cx="-190" cy="-215" r="26" fill="#3ee6c4"/>
+    <circle cx="255" cy="105" r="22" fill="#ff9f5a"/>
+    <circle cx="-235" cy="170" r="20" fill="#3ee6c4" fill-opacity="0.8"/>
+    <circle cx="150" cy="-285" r="30" fill="#ff6b7d"/>
+    <circle cx="150" cy="-285" r="52" fill="none" stroke="#ff6b7d" stroke-opacity="0.4" stroke-width="8"/>
+    <path d="M0 -105 L88 -72 V6 C88 66 48 100 0 120 C-48 100 -88 66 -88 6 V-72 Z" fill="#0e1220" stroke="#3ee6c4" stroke-width="22" stroke-linejoin="round"/>
+  </g></g>
+</svg>
