@@ -9,6 +9,29 @@ lockfile changes, and notifies you only when something matters.
 
 Everything runs locally. Nothing about your code or your keys leaves your Mac (see [Privacy](#privacy)).
 
+![NoVul: a radar of open issues by project and severity, next to a fix plan ranked by what to fix first](docs/screenshots/main.webp)
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/screenshots/fix-with-agent.webp" alt="Fix with agent menu: copy a prompt for Claude Code or Codex, or open one in Terminal"></td>
+    <td width="50%"><img src="docs/screenshots/this-mac.webp" alt="This Mac tab: runtimes past end of life and their advisories"></td>
+  </tr>
+  <tr>
+    <td><b>Fix with agent.</b> Hand the findings to Claude Code or Codex with one prompt.</td>
+    <td><b>This Mac.</b> Runtimes, Homebrew, global installs and AI tools.</td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/secrets.webp" alt="Secrets tab: exposed keys with file, line and a one-click permission fix, never the value"></td>
+    <td><img src="docs/screenshots/onboarding.webp" alt="First run: NoVul suggests the folders where your code lives"></td>
+  </tr>
+  <tr>
+    <td><b>Exposed secrets.</b> Where each key is and how to lock it down, never the value.</td>
+    <td><b>First run.</b> Pick the folders where your code lives.</td>
+  </tr>
+</table>
+
+<sub>Screenshots use NoVul's built-in demo data.</sub>
+
 ## What it checks
 
 - **Project dependencies.** Lockfiles for npm, pnpm, Yarn, Bun, uv, Poetry, Pipenv, PDM,
