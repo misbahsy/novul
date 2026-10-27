@@ -519,11 +519,27 @@ fn config_with(exclusions: &[String], extra_paths: &[String]) -> String {
             r"(\.lock|-lock\.json|-lock\.yaml|\.lockb|(^|/)go\.sum|shrinkwrap\.json)$",
             r"\.(example|sample|md)$",
             r"(^|/)(test|tests|fixtures|__tests__)/",
+            r"(_test\.(py|go)|\.(test|spec)\.[jt]sx?)$",
         ]
         .map(String::from),
     );
-    let list: Vec<String> = paths.iter().map(|p| format!("'''{p}'''")).collect();
-    format!("[extend]\nuseDefault = true\n\n[allowlist]\ndescription = \"novul\"\npaths = [{}]\n", list.join(", "))
+    let placeholders = [
+        // ${STRIPE_API_KEY} or $TOKEN names an environment variable; it is not the value
+        r#"^["']?\$\{?[A-Za-z_][A-Za-z0-9_]*\}?:?["']?$"#,
+        // YOUR_API_KEY, sk-my-virtual-key
+        r"(?i)(^|[-_])(your|my)[-_]",
+        r"(?i)^(x{4,}|\*{4,}|<[^>]*>|changeme|placeholder|example|dummy|fake|replace[-_]?me)",
+    ]
+    .map(String::from);
+    let quote = |v: &[String]| v.iter().map(|p| format!("'''{p}'''")).collect::<Vec<_>>().join(", ");
+    format!(
+        "[extend]\nuseDefault = true\n\n\
+         [[allowlists]]\ndescription = \"novul paths\"\npaths = [{}]\n\n\
+         [[allowlists]]\ndescription = \"novul placeholders\"\nregexTarget = \"secret\"\nregexes = [{}]\n\n\
+         [[allowlists]]\ndescription = \"novul pytest coverage flags\"\nregexTarget = \"line\"\nregexes = ['''--cov=''']\n",
+        quote(&paths),
+        quote(&placeholders)
+    )
 }
 
 fn home_files(home: &Path) -> Vec<PathBuf> {
@@ -733,6 +749,35 @@ mod tests {
         assert_eq!(parse_day("1970-01-01T00:00:00Z"), Some(0));
         assert_eq!(ymd(parse_day("2026-10-25").unwrap()), "2026-10-25");
         assert_eq!(parse_day("garbage"), None);
+    }
+
+    #[tokio::test]
+    async fn placeholders_env_refs_and_test_files_are_not_secrets() {
+        let tmp = tempfile::tempdir().unwrap();
+        let d = tmp.path();
+        let files = [
+            // split literals keep this repository's own secret scan quiet
+            ("poll.sh", concat!("curl -u \"${STRIPE", "_API_KEY}:\" https://api.stripe.com/v1/charges\n")),
+            ("example.sh", concat!("curl -H \"Authorization: Bearer sk-", "my-virtual-key\" https://proxy.local/v1/chat\n")),
+            ("call.sh", concat!("curl -H 'x-api-key: YOUR", "_API_KEY' https://api.example.com/v1/run\n")),
+            ("ssh_test.py", "assert key.startswith(\"-----BEGIN RSA PRIVATE KEY-----\\nMIIEowIBAAKCAQEA7Qd2k\\n-----END RSA PRIVATE KEY-----\")\n"),
+            ("pyproject.toml", "[tool.pytest.ini_options]\naddopts = [\"--cov=imbue.mngr_latchkey_service_api_key\"]\n"),
+        ];
+        for (name, body) in files {
+            fs::write(d.join(name), body).unwrap();
+        }
+        let hits = |config: String| async move {
+            let mut files: Vec<String> = run_gitleaks(&gitleaks(), &config, d, ".", BATCH_TIMEOUT).await.unwrap().into_iter().map(|l| l.file).collect();
+            files.sort();
+            files.dedup();
+            files
+        };
+        let by_default = hits("[extend]\nuseDefault = true\n".into()).await;
+        assert!(by_default.len() >= 3, "the samples must be real gitleaks hits: {by_default:?}");
+        assert_eq!(hits(config_toml(&excl())).await, Vec::<String>::new());
+
+        fs::write(d.join("deploy.sh"), format!("export AWS_ACCESS_KEY_ID={AWS}\n")).unwrap();
+        assert_eq!(hits(config_toml(&excl())).await.len(), 1, "a real key is still found");
     }
 
     #[test]

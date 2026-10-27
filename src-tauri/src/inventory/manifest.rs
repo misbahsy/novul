@@ -1,5 +1,5 @@
 use crate::model::Lockfile;
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
 /// PEP 503: lowercase, runs of `-_.` become `-`.
 pub fn normalize_pypi(name: &str) -> String {
@@ -78,6 +78,31 @@ fn composer_json(text: &str) -> Option<Vec<String>> {
     table_keys(v.get("require-dev"), &mut out);
     out.retain(|n| n != "php" && !n.starts_with("ext-"));
     Some(out)
+}
+
+/// A requirements file's own lines: PEP 503 name -> pinned to one exact version (`==x` or `===x`,
+/// no wildcard), and the files it includes with `-r`.
+pub fn requirement_pins(text: &str) -> (HashMap<String, bool>, Vec<String>) {
+    let mut pins = HashMap::new();
+    let mut includes = Vec::new();
+    for line in text.lines() {
+        let line = line.split(" #").next().unwrap_or("").trim();
+        if let Some(rest) = line.strip_prefix("--requirement").or_else(|| line.strip_prefix("-r")) {
+            let f = rest.trim_start_matches('=').trim();
+            if !f.is_empty() {
+                includes.push(f.to_string());
+            }
+            continue;
+        }
+        let Some(name) = requirement_name(line) else { continue };
+        let mut spec = line[name.len()..].split(';').next().unwrap_or("").trim();
+        if spec.starts_with('[') {
+            spec = spec.split_once(']').map_or("", |(_, s)| s.trim());
+        }
+        let exact = spec.starts_with("==") && !spec.contains([',', '*']);
+        pins.insert(normalize_pypi(name), exact);
+    }
+    (pins, includes)
 }
 
 fn requirements_txt(text: &str) -> Vec<String> {

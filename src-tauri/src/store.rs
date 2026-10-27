@@ -120,7 +120,8 @@ pub fn priority_of(malicious: bool, kev: bool, score: Option<f32>) -> Priority {
 }
 
 /// Counts exclude muted, (unless `show_dev`) dev and (unless `show_estimated`) estimated-version
-/// findings, except malicious or actively exploited ones, which always count. Resolved ones are never loaded.
+/// findings. Malicious ones always count; actively exploited ones count even when dev-only, but an
+/// estimated version is often wrong, so an estimated exploited finding stays hidden. Resolved ones are never loaded.
 pub fn counts_of(findings: &[FindingView], show_dev: bool, show_estimated: bool) -> Counts {
     let mut c = Counts::default();
     for f in findings.iter().filter(|f| countable(f, show_dev, show_estimated)) {
@@ -139,7 +140,8 @@ pub fn counts_of(findings: &[FindingView], show_dev: bool, show_estimated: bool)
 
 pub fn countable(f: &FindingView, show_dev: bool, show_estimated: bool) -> bool {
     !f.muted
-        && (f.priority <= Priority::Exploited || ((show_dev || !f.dev) && (show_estimated || !f.inferred)))
+        && (f.priority == Priority::Malicious
+            || ((f.priority == Priority::Exploited || show_dev || !f.dev) && (show_estimated || !f.inferred)))
 }
 
 /// Columns added after the first release; `CREATE TABLE IF NOT EXISTS` doesn't touch existing DBs.
@@ -278,8 +280,22 @@ impl Store {
                last_seen_at=excluded.last_seen_at, resolved_at=NULL
              RETURNING id",
         )?;
+        // An advisory's main id can change (a GHSA gets a CVE id), so a row stored under one of the
+        // new aliases is the same finding: keep its id, first-seen time and mute.
+        let mut rekey = tx.prepare_cached(
+            "UPDATE finding SET group_id=?1 WHERE id = (
+               SELECT id FROM finding WHERE kind=?2 AND project_path=?3 AND ecosystem=?4 AND name=?5
+                 AND group_id IN (SELECT value FROM json_each(?6))
+                 AND NOT EXISTS (SELECT 1 FROM finding g WHERE g.kind=?2 AND g.group_id=?1 AND g.project_path=?3 AND g.ecosystem=?4 AND g.name=?5)
+               ORDER BY resolved_at IS NOT NULL, id LIMIT 1)",
+        )?;
+        let mut rekey_mute = tx.prepare_cached(
+            "UPDATE OR IGNORE mute SET group_id=?1 WHERE ecosystem=?2 AND name=?3 AND group_id IN (SELECT value FROM json_each(?4))",
+        )?;
         for f in inputs {
             let aliases = serde_json::to_string(&f.aliases).unwrap_or_else(|_| "[]".into());
+            rekey.execute(params![f.group_id, f.kind, f.project_path, f.ecosystem, f.name, aliases])?;
+            rekey_mute.execute(params![f.group_id, f.ecosystem, f.name, aliases])?;
             let id: i64 = stmt.query_row(
                 params![
                     f.kind,
@@ -818,6 +834,20 @@ mod tests {
     }
 
     #[test]
+    fn advisory_that_gains_a_cve_id_keeps_its_finding_id_and_mute() {
+        let (_d, s) = store();
+        write(&s, "a", &[input("a", "dompurify", "3.0.0", "GHSA-aaaa")], 100);
+        let old = s.open_findings().unwrap()[0].clone();
+        s.set_muted(old.id, true).unwrap();
+        let mut renamed = input("a", "dompurify", "3.0.0", "CVE-2026-1");
+        renamed.aliases = vec!["GHSA-aaaa".into()];
+        write(&s, "a", &[renamed], 200);
+        let all = s.open_findings().unwrap();
+        assert_eq!(all.len(), 1);
+        assert_eq!((all[0].id, all[0].group_id.as_str(), all[0].muted), (old.id, "CVE-2026-1", true));
+    }
+
+    #[test]
     fn mute_hides_from_counts_but_still_lists() {
         let (_d, s) = store();
         write(&s, "a", &[input("a", "lodash", "4.17.20", "CVE-1")], 100);
@@ -854,7 +884,7 @@ mod tests {
     }
 
     #[test]
-    fn estimated_findings_only_count_with_show_estimated_unless_malicious_or_exploited() {
+    fn estimated_findings_only_count_with_show_estimated_unless_malicious() {
         let (_d, s) = store();
         let mut est = input("a", "requests", "1.0.0", "CVE-5");
         est.inferred = true;
@@ -871,8 +901,11 @@ mod tests {
         assert_eq!(counts_of(&all, false, true).critical, 1, "dev + estimated stays hidden");
         assert_eq!(counts_of(&all, true, false).critical, 0);
         assert_eq!(counts_of(&all, true, true).critical, 2);
+        // an estimated version is often wrong (pillow 9.5.0 guessed, 12.1.0 installed): exploited doesn't override it
         let exploited = FindingView { kev: true, priority: Priority::Exploited, ..all.iter().find(|f| f.name == "requests").unwrap().clone() };
-        assert!(countable(&exploited, false, false));
+        assert!(!countable(&exploited, false, false));
+        assert!(countable(&exploited, false, true));
+        assert!(countable(&FindingView { inferred: false, dev: true, ..exploited }, false, false), "exploited dev-only still counts");
     }
 
     #[test]

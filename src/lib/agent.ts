@@ -37,7 +37,8 @@ ${f.project ? "" : `  ${b} projects
       every project with open issues, most urgent first
 `}  ${b} findings --json --project ${dir} --min high
       that project's malicious, actively exploited, critical and high findings, each with fix_command
-      (drop --min high for medium and low; add --limit N to page through long lists)
+      (drop --min high for medium and low; add --limit N to page through long lists;
+      fixed_version, direct and fix_command can be null: no fix yet, or unknown)
   ${b} findings --json --kind secret${f.project ? ` --project ${dir}` : ""}
       exposed secrets (where they are, never the value)
 ${f.project ? "" : `  ${b} findings --json --kind brew,runtime,global,tool --min high

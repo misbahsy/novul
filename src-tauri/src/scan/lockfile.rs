@@ -1,5 +1,7 @@
+use crate::inventory::manifest::{normalize_pypi, requirement_pins};
 use crate::model::{LockfileScan, ScannedPackage, VulnGroup};
 use crate::scan::fix;
+use std::collections::HashSet;
 use serde::Deserialize;
 use serde_json::Value;
 use std::path::{Path, PathBuf};
@@ -53,11 +55,85 @@ pub async fn scan_lockfiles(osv_scanner: &Path, lockfiles: &[PathBuf], offline: 
     if lockfiles.is_empty() {
         return Ok(vec![]);
     }
-    match run_scan(osv_scanner, lockfiles, offline).await {
-        // a lockfile used an ecosystem whose database isn't downloaded yet
-        Err(e) if e == MISSING_DB => run_scan(osv_scanner, lockfiles, offline.map(|(o, _)| (o, true))).await,
-        r => r,
+    let (venvs, rest): (Vec<PathBuf>, Vec<PathBuf>) = lockfiles.iter().cloned().partition(|l| is_requirements(l) && sibling_venv(l).is_some());
+    let mut scans = if rest.is_empty() {
+        vec![]
+    } else {
+        match run_scan(osv_scanner, &rest, offline).await {
+            // a lockfile used an ecosystem whose database isn't downloaded yet
+            Err(e) if e == MISSING_DB => run_scan(osv_scanner, &rest, offline.map(|(o, _)| (o, true))).await,
+            r => r,
+        }?
+    };
+    scans.iter_mut().for_each(refine_requirements);
+    for (i, req) in venvs.iter().enumerate() {
+        let packages = if venv_owner(req, &venvs) == Some(i) {
+            let venv = sibling_venv(req).unwrap_or_default();
+            let found = crate::inventory::globals::run_osv(osv_scanner, &venv.join("lib"), "python/wheelegg", offline).await?;
+            let mut packages: Vec<ScannedPackage> = Vec::new();
+            for p in found.into_iter().flat_map(|s| s.packages) {
+                if !packages.iter().any(|q| q.name == p.name && q.version == p.version) {
+                    packages.push(ScannedPackage { inferred: false, ..p });
+                }
+            }
+            packages
+        } else {
+            vec![]
+        };
+        scans.push(LockfileScan { lockfile: req.clone(), packages });
     }
+    Ok(scans)
+}
+
+/// The virtualenv next to a requirements file (`.venv` or `venv` with a pyvenv.cfg). Its installed
+/// packages are the real versions, which the requirements file can only estimate.
+fn sibling_venv(req: &Path) -> Option<PathBuf> {
+    let dir = req.parent()?;
+    [".venv", "venv"].iter().map(|n| dir.join(n)).find(|v| v.join("pyvenv.cfg").is_file())
+}
+
+/// Several requirements files can share one venv; it is reported once, under requirements.txt
+/// when present, else the first file by name.
+fn venv_owner(req: &Path, all: &[PathBuf]) -> Option<usize> {
+    let dir = req.parent();
+    let siblings = || all.iter().enumerate().filter(|(_, l)| l.parent() == dir);
+    siblings().find(|(_, l)| l.file_name().is_some_and(|n| n == "requirements.txt")).or_else(|| siblings().min_by_key(|(_, l)| *l)).map(|(i, _)| i)
+}
+
+fn is_requirements(path: &Path) -> bool {
+    path.file_name().and_then(|n| n.to_str()).is_some_and(|n| n.starts_with("requirements") && n.ends_with(".txt"))
+}
+
+/// osv-scanner reads `Pillow>=10.0` as Pillow 10.0 installed. Only an exact `==` pin names the
+/// installed version, so packages from other lines become estimated. Packages that come in
+/// through `-r requirements.txt` are dropped: that file is scanned on its own.
+fn refine_requirements(scan: &mut LockfileScan) {
+    if !is_requirements(&scan.lockfile) {
+        return;
+    }
+    let Ok(text) = std::fs::read_to_string(&scan.lockfile) else { return };
+    let (own, includes) = requirement_pins(&text);
+    let dir = scan.lockfile.parent().unwrap_or(Path::new(""));
+    let included: HashSet<String> = includes
+        .iter()
+        .map(|f| dir.join(f))
+        .filter(|p| is_requirements(p))
+        .filter_map(|p| std::fs::read_to_string(p).ok())
+        .flat_map(|t| requirement_pins(&t).0.into_keys())
+        .collect();
+    scan.packages.retain_mut(|p| {
+        if p.inferred {
+            return true;
+        }
+        let name = normalize_pypi(&p.name);
+        match own.get(&name) {
+            Some(&exact) => {
+                p.inferred = !exact;
+                true
+            }
+            None => !included.contains(&name),
+        }
+    });
 }
 
 const MISSING_DB: &str = "osv-scanner: offline database missing";
@@ -215,6 +291,75 @@ pub fn parse_output(json: &str) -> Result<Vec<LockfileScan>, String> {
 
 #[cfg(test)]
 mod tests {
+
+    fn fake_venv(dir: &Path, name: &str, version: &str) {
+        let meta = dir.join(format!(".venv/lib/python3.12/site-packages/{name}-{version}.dist-info/METADATA"));
+        std::fs::create_dir_all(meta.parent().unwrap()).unwrap();
+        std::fs::write(dir.join(".venv/pyvenv.cfg"), "home = /usr/bin\n").unwrap();
+        std::fs::write(meta, format!("Metadata-Version: 2.1\nName: {name}\nVersion: {version}\n")).unwrap();
+    }
+
+    #[test]
+    fn one_requirements_file_per_folder_reports_the_venv() {
+        let tmp = tempfile::tempdir().unwrap();
+        let (a, b) = (tmp.path().join("a"), tmp.path().join("b"));
+        std::fs::create_dir_all(&b).unwrap();
+        fake_venv(&a, "pillow", "11.3.0");
+        let all = [a.join("requirements-gpu.txt"), a.join("requirements.txt"), a.join("requirements-dev.txt"), b.join("requirements.txt")];
+        assert!(sibling_venv(&all[0]).is_some());
+        assert!(sibling_venv(&all[3]).is_none(), "no pyvenv.cfg, no venv");
+        assert_eq!(venv_owner(&all[0], &all), Some(1));
+        let without_main = [a.join("requirements-gpu.txt"), a.join("requirements-dev.txt")];
+        assert_eq!(venv_owner(&without_main[0], &without_main), Some(1));
+    }
+
+    #[tokio::test]
+    #[ignore]
+    async fn live_venv_versions_replace_requirements_lower_bounds() {
+        let tmp = tempfile::tempdir().unwrap();
+        let d = tmp.path();
+        fake_venv(d, "pillow", "11.3.0");
+        std::fs::write(d.join("requirements.txt"), "Pillow>=9.5.0\n").unwrap();
+        std::fs::write(d.join("requirements-dev.txt"), "-r requirements.txt\n").unwrap();
+        let osv = PathBuf::from(concat!(env!("CARGO_MANIFEST_DIR"), "/binaries/osv-scanner-aarch64-apple-darwin"));
+        let scans = scan_lockfiles(&osv, &[d.join("requirements.txt"), d.join("requirements-dev.txt")], None).await.unwrap();
+        let main = scans.iter().find(|s| s.lockfile.ends_with("requirements.txt")).unwrap();
+        let pillow = main.packages.iter().find(|p| p.name.eq_ignore_ascii_case("pillow")).expect("pillow 11.3.0 has advisories");
+        assert_eq!((pillow.version.as_str(), pillow.inferred), ("11.3.0", false));
+        assert!(scans.iter().find(|s| s.lockfile.ends_with("requirements-dev.txt")).unwrap().packages.is_empty());
+    }
+
+    #[test]
+    fn requirements_lower_bounds_are_estimated_and_includes_are_not_repeated() {
+        let tmp = tempfile::tempdir().unwrap();
+        let d = tmp.path();
+        std::fs::write(d.join("requirements.txt"), "Pillow>=10.0  # images\nrequests==2.31.0\nflask[async]==2.2.*\nnumpy>=1.0,<2 ; python_version>'3.8'\n").unwrap();
+        std::fs::write(d.join("requirements-dev.txt"), "-r requirements.txt\npytest==8.0.0\n").unwrap();
+        let pkg = |name: &str, inferred: bool| ScannedPackage {
+            ecosystem: "PyPI".into(),
+            name: name.into(),
+            version: "1.0".into(),
+            dev: false,
+            inferred,
+            vulns: vec![],
+        };
+        let scan = |file: &str, names: &[&str]| {
+            let mut s = LockfileScan { lockfile: d.join(file), packages: names.iter().map(|n| pkg(n, false)).collect() };
+            s.packages.push(pkg("urllib3", true));
+            refine_requirements(&mut s);
+            s.packages.iter().map(|p| (p.name.clone(), p.inferred)).collect::<Vec<_>>()
+        };
+        let own = |v: &[(&str, bool)]| v.iter().map(|(n, i)| (n.to_string(), *i)).collect::<Vec<_>>();
+        assert_eq!(
+            scan("requirements.txt", &["pillow", "requests", "flask", "numpy"]),
+            own(&[("pillow", true), ("requests", false), ("flask", true), ("numpy", true), ("urllib3", true)])
+        );
+        assert_eq!(
+            scan("requirements-dev.txt", &["pillow", "requests", "pytest"]),
+            own(&[("pytest", false), ("urllib3", true)]),
+            "pillow and requests are reported once, by requirements.txt"
+        );
+    }
 
     #[test]
     fn offline_databases_download_only_when_missing_or_a_day_old() {

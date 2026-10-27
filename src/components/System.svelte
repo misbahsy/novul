@@ -101,7 +101,7 @@
 {#if globalPkgs.length}{@render named("Global packages", globalPkgs, globalShown, "global", "package")}{/if}
 
 {#if tools.length}
-  <h3>AI tools</h3>
+  <h3>AI and developer tools</h3>
   {#each tools as g (g.name)}
     <section style="--c:{COLOR[PRIORITIES[worst(g.fs)]]}">
       <div class="head">

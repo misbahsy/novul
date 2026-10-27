@@ -49,7 +49,8 @@ USAGE
 
 --project matches findings whose lockfile is inside that directory.
 Estimated findings (version guessed from requirements.txt) are hidden unless
---include-estimated is given; malicious and actively exploited ones always show.
+--include-estimated is given; malicious ones always show, and actively exploited
+dev-only ones show too.
 Secret findings never contain the secret value, only a fingerprint.";
 
 #[derive(Debug, Default, Clone, PartialEq)]
@@ -294,8 +295,8 @@ fn select(conn: &Connection, q: &Query) -> Result<(usize, Vec<Row>), String> {
         .filter(|r| !r.muted)
         .filter(|r| q.min.is_none_or(|m| r.priority <= m))
         .filter(|r| {
-            r.priority <= Priority::Exploited
-                || (q.include_dev || !r.dev) && (q.include_estimated || !r.estimated)
+            r.priority == Priority::Malicious
+                || (r.priority == Priority::Exploited || q.include_dev || !r.dev) && (q.include_estimated || !r.estimated)
         })
         .filter(|r| q.kinds.is_empty() || q.kinds.contains(&r.kind))
         .filter(|r| {
@@ -931,7 +932,7 @@ pub mod tests {
     }
 
     #[test]
-    fn estimated_findings_hidden_unless_included_but_exploited_always_show() {
+    fn estimated_findings_hidden_unless_included_but_malicious_always_show() {
         let (_d, db) = temp_db();
         let s = Store::open(&db).unwrap();
         let mut est = input("est", "requests", "CVE-10", 9.8, false);

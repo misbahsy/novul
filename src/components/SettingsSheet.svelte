@@ -102,7 +102,7 @@
       <div class="check">
         <label><input type="checkbox" bind:checked={draft.show_estimated} /> Include estimated versions</label>
         <Info
-          text="Python projects that only have a requirements.txt don't record every package version, so NoVul estimates the rest, and the installed version may differ. Estimated findings are hidden from counts, the menu bar and notifications unless this is on. Malicious or actively exploited ones always show. Pin versions with a lockfile (uv, poetry, pip-tools) for exact results."
+          text="Python projects that only have a requirements.txt don't record every package version, so NoVul estimates the rest, and the installed version may differ. Estimated findings are hidden from counts, the menu bar and notifications unless this is on. Malicious ones always show. Pin versions with a lockfile (uv, poetry, pip-tools) for exact results."
           tip="off, until you pin versions with a lockfile" />
       </div>
       <div class="check">

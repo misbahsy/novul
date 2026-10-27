@@ -130,7 +130,7 @@ async fn cmd_stdout(bin: &str, args: &[&str]) -> Option<String> {
 
 /// `taskpolicy -b <osv> scan source -r <dir> --no-ignore --x-no-default-plugins --x-plugins <plugins>`.
 /// Exit 0 and 1 are success, 128 = nothing found.
-async fn run_osv(osv_scanner: &Path, dir: &Path, plugins: &str, offline: Option<(&Offline, bool)>) -> Result<Vec<LockfileScan>, String> {
+pub(crate) async fn run_osv(osv_scanner: &Path, dir: &Path, plugins: &str, offline: Option<(&Offline, bool)>) -> Result<Vec<LockfileScan>, String> {
     let mut cmd = tokio::process::Command::new("/usr/sbin/taskpolicy");
     cmd.arg("-b").arg(osv_scanner).args(["scan", "source", "-r"]).arg(dir);
     if let Some((o, download)) = offline {
@@ -214,6 +214,21 @@ fn owner(dir: &Path, path: &Path) -> Option<String> {
     }
 }
 
+/// An installed package's manifest is `node_modules/<name>/package.json` or
+/// `node_modules/@scope/<name>/package.json`. Other package.json files inside a package are
+/// test fixtures or build stubs (resolve/test/resolver/.../package.json), not installs.
+fn installed_package_json(path: &Path) -> bool {
+    if path.file_name().is_none_or(|n| n != "package.json") {
+        return true;
+    }
+    let mut up = path.ancestors().skip(2).map(|p| p.file_name().unwrap_or_default());
+    match up.next() {
+        Some(n) if n == "node_modules" => true,
+        Some(n) if n.to_string_lossy().starts_with('@') => up.next().is_some_and(|n| n == "node_modules"),
+        _ => false,
+    }
+}
+
 fn safe_name(s: &str) -> bool {
     !s.is_empty() && !s.starts_with('-') && s.chars().all(|c| c.is_ascii_alphanumeric() || "@._/+-".contains(c))
 }
@@ -246,7 +261,7 @@ fn fix_command(kind: Kind, p: &ScannedPackage, owner: &str, is_top: bool, fixed:
 /// packages) are reported against that tool's directory and are not `direct`.
 fn findings_from(kind: Kind, dir: &Path, scans: &[LockfileScan]) -> Vec<FindingInput> {
     let mut out: Vec<FindingInput> = Vec::new();
-    for scan in scans {
+    for scan in scans.iter().filter(|s| installed_package_json(&s.lockfile)) {
         for p in scan.packages.iter().filter(|p| !p.vulns.is_empty()) {
             let owner_name = match kind {
                 Kind::Gem | Kind::CargoCrates => Some(p.name.clone()),
@@ -334,6 +349,30 @@ mod tests {
         let b = find(&f, "@fastify/busboy");
         assert!(b.is_empty() || b[0].project_path == format!("{NPM_DIR}/netlify-cli"));
         assert_eq!(find(&f, "zod")[0].project_path, format!("{NPM_DIR}/netlify-cli"));
+    }
+
+    #[test]
+    fn package_json_fixtures_inside_a_package_are_not_installs() {
+        for p in [
+            "/g/node_modules/resolve/package.json",
+            "/g/node_modules/@scope/name/package.json",
+            "/g/node_modules/expo-cli/node_modules/resolve/package.json",
+            "/g/node_modules/.pnpm/a@1.0.0/node_modules/a/package.json",
+            "/g/node_modules/netlify-cli/node_modules/@netlify/proxy/bin/proxy",
+        ] {
+            assert!(installed_package_json(Path::new(p)), "{p}");
+        }
+        for p in [
+            "/g/node_modules/resolve/test/resolver/symlinked/package/package.json",
+            "/g/node_modules/signal-exit/dist/mjs/package.json",
+            "/g/node_modules/@scope/name/fixtures/package.json",
+        ] {
+            assert!(!installed_package_json(Path::new(p)), "{p}");
+        }
+        let json = r#"{"results":[{"source":{"path":"/g/node_modules/resolve/test/resolver/symlinked/package/package.json","type":"lockfile"},
+            "packages":[{"package":{"name":"monorepo-symlink-test","version":"0.0.0","ecosystem":"npm"},
+            "vulnerabilities":[{"id":"MAL-2025-1"}],"groups":[{"ids":["MAL-2025-1"]}]}]}]}"#;
+        assert!(findings_from(Kind::Bun, Path::new("/g/node_modules"), &parse_output(json).unwrap()).is_empty());
     }
 
     #[test]

@@ -27,7 +27,7 @@ struct Tool {
     github: Option<(&'static str, &'static [&'static str])>,
 }
 
-const TOOLS: [Tool; 5] = [
+const TOOLS: [Tool; 6] = [
     Tool {
         name: "Claude Code",
         bins: &["claude"],
@@ -42,6 +42,8 @@ const TOOLS: [Tool; 5] = [
         github: Some(("anomalyco/opencode", &["opencode-ai", "opencode"])),
     },
     Tool { name: "pi", bins: &["pi"], osv: None, github: Some(("badlogic/pi-mono", &["@mariozechner/pi-coding-agent"])) },
+    // Homebrew installs bun from the oven-sh/bun tap, which `brew vulns` skips as untrusted
+    Tool { name: "Bun", bins: &["bun"], osv: Some(("npm", "bun")), github: Some((BUN_REPO, &["bun"])) },
     Tool {
         name: "Ollama",
         bins: &["ollama"],
@@ -638,6 +640,9 @@ fn update_command(i: &Install) -> Option<String> {
         ("OpenCode", ..) => "opencode upgrade",
         ("pi", true, _) => "npm install -g @mariozechner/pi-coding-agent@latest",
         ("Ollama", _, true) => "brew upgrade ollama",
+        ("Bun", true, _) => "npm install -g bun@latest",
+        ("Bun", _, true) => "brew upgrade oven-sh/bun/bun",
+        ("Bun", ..) => "bun upgrade",
         _ => return None,
     };
     Some(cmd.into())
@@ -879,6 +884,17 @@ mod tests {
         assert_eq!(cmd("Ollama", "/opt/homebrew/Cellar/ollama/0.33.0/bin/ollama").as_deref(), Some("brew upgrade ollama"));
         assert_eq!(cmd("Ollama", "/Applications/Ollama.app/ollama"), None);
         assert_eq!(cmd("OpenCode", "/Users/me/.opencode/bin/opencode").as_deref(), Some("opencode upgrade"));
+        assert_eq!(cmd("Bun", "/opt/homebrew/Cellar/bun/1.3.9/bin/bun").as_deref(), Some("brew upgrade oven-sh/bun/bun"));
+        assert_eq!(cmd("Bun", "/Users/me/.bun/bin/bun").as_deref(), Some("bun upgrade"));
+    }
+
+    #[test]
+    fn standalone_bun_is_checked_like_the_bun_inside_claude_code() {
+        // Homebrew's bun comes from the oven-sh/bun tap, which `brew vulns` skips as untrusted
+        let bun = TOOLS.iter().find(|t| t.name == "Bun").expect("bun is a checked tool");
+        assert_eq!(bun.github.map(|g| g.0), Some(BUN_REPO));
+        let (_, names) = bun.github.unwrap();
+        assert_eq!(ids(&github_advs(&json("github-bun-advisories.json"), names, "1.3.9")), ["CVE-2026-111497", "GHSA-26q8-h657-pf84"]);
     }
 
     #[test]

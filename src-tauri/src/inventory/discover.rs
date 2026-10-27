@@ -71,7 +71,13 @@ pub fn discover(roots: &[PathBuf], exclusions: &[String]) -> Vec<Lockfile> {
             found.insert(path.clone(), Lockfile { path, root: root_dir, ecosystem: ecosystem.to_string(), manifest });
         }
     }
-    found.into_values().collect()
+    // A requirements*.txt next to a Python lockfile only repeats it with less exact versions.
+    let locked: Vec<PathBuf> = found.values().filter(|l| l.ecosystem == "PyPI" && !is_requirements(&l.path)).map(|l| l.root.clone()).collect();
+    found.into_values().filter(|l| !(is_requirements(&l.path) && locked.contains(&l.root))).collect()
+}
+
+fn is_requirements(path: &Path) -> bool {
+    path.file_name().and_then(|n| n.to_str()).is_some_and(|n| n.starts_with("requirements") && n.ends_with(".txt"))
 }
 
 #[cfg(test)]
@@ -115,6 +121,8 @@ mod tests {
         touch(r, "g/ignored/uv.lock");
         touch(r, "g/kept/uv.lock");
         touch(r, "g/kept/pyproject.toml");
+        touch(r, "g/kept/requirements.txt"); // repeats uv.lock
+        touch(r, "g/kept/requirements-gpu.txt");
 
         let excl: Vec<String> = ["node_modules", "archive*"].iter().map(|s| s.to_string()).collect();
         let found = discover(&[r.to_path_buf()], &excl);

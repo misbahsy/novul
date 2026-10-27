@@ -20,7 +20,7 @@ fn tools() -> Value {
     json!([
         {
             "name": "list_findings",
-            "description": "List open vulnerability findings from NoVul's latest local scan, most urgent first (malicious, exploited, critical, high, ...). Each has id, package, installed and fixed version, direct/transitive, advisory id and fix_command. fix_command is a suggestion: review it, then run it in the project folder. Prefer upgrading direct dependencies. After fixing, call rescan to confirm. Muted findings, dev-only findings and estimated ones (version guessed from requirements.txt, marked estimated: true) are hidden unless include_dev / include_estimated is set; malicious and actively exploited ones always show.",
+            "description": "List open vulnerability findings from NoVul's latest local scan, most urgent first (malicious, exploited, critical, high, ...). Each has id, package, installed and fixed version, direct/transitive, advisory id and fix_command (fixed_version, direct and fix_command can be null: no fix yet, or unknown). fix_command is a suggestion: review it, then run it in the project folder. Prefer upgrading direct dependencies. After fixing, call rescan to confirm. Muted findings, dev-only findings and estimated ones (version guessed from requirements.txt, marked estimated: true) are hidden unless include_dev / include_estimated is set; malicious ones always show, and actively exploited dev-only ones show too.",
             "inputSchema": {"type": "object", "properties": {
                 "project": project,
                 "min_priority": {"type": "string", "enum": ["malicious", "exploited", "critical", "high", "medium", "low"], "description": "Only findings at least this urgent"},

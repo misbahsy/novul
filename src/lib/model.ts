@@ -196,15 +196,14 @@ export function derive(findings: FindingView[], showDev: boolean, showEstimated:
   for (const f of findings) {
     if (f.muted) continue;
     // Malicious or actively exploited dev packages run on this machine: never hide them.
-    if (RANK[f.priority] > RANK.exploited) {
-      if (f.dev && !showDev) {
-        hiddenDev++;
-        continue;
-      }
-      if (f.inferred && !showEstimated) {
-        hiddenEstimated++;
-        continue;
-      }
+    // An estimated version is often wrong, so only malicious ones skip that filter.
+    if (f.dev && !showDev && RANK[f.priority] > RANK.exploited) {
+      hiddenDev++;
+      continue;
+    }
+    if (f.inferred && !showEstimated && f.priority !== "malicious") {
+      hiddenEstimated++;
+      continue;
     }
     counts[RANK[f.priority]]++;
     items.push({

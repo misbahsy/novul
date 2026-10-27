@@ -386,8 +386,9 @@ let settings: Settings = {
 const count = (fs: FindingView[]): Counts => {
   const c: Counts = { malicious: 0, exploited: 0, critical: 0, high: 0, medium: 0, low: 0, unrated: 0 };
   for (const f of fs) {
-    const always = f.priority === "malicious" || f.priority === "exploited";
-    if (!f.muted && (always || ((settings.show_dev || !f.dev) && (settings.show_estimated || !f.inferred)))) c[f.priority]++;
+    const mal = f.priority === "malicious";
+    const devOk = mal || f.priority === "exploited" || settings.show_dev || !f.dev;
+    if (!f.muted && devOk && (mal || settings.show_estimated || !f.inferred)) c[f.priority]++;
   }
   return c;
 };
