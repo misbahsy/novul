@@ -16,7 +16,8 @@ dmg=$(ls -t src-tauri/target/release/bundle/dmg/NoVul_*.dmg | head -1)
 # Every executable must carry the Developer ID signature with hardened runtime.
 for bin in "$app"/Contents/MacOS/*; do
   codesign --verify --strict --verbose=1 "$bin"
-  codesign -dv "$bin" 2>&1 | grep -q 'flags=.*runtime' || { echo "missing hardened runtime: $bin"; exit 1; }
+  info=$(codesign -dv "$bin" 2>&1)
+  [[ $info == *"flags="*"(runtime)"* ]] || { echo "missing hardened runtime: $bin"; exit 1; }
 done
 codesign --verify --deep --strict "$app"
 # A signature can verify and still get the process killed at launch (gitleaks needs an entitlement).
