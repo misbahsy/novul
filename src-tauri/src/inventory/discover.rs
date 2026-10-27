@@ -71,9 +71,28 @@ pub fn discover(roots: &[PathBuf], exclusions: &[String]) -> Vec<Lockfile> {
             found.insert(path.clone(), Lockfile { path, root: root_dir, ecosystem: ecosystem.to_string(), manifest });
         }
     }
-    // A requirements*.txt next to a Python lockfile only repeats it with less exact versions.
-    let locked: Vec<PathBuf> = found.values().filter(|l| l.ecosystem == "PyPI" && !is_requirements(&l.path)).map(|l| l.root.clone()).collect();
-    found.into_values().filter(|l| !(is_requirements(&l.path) && locked.contains(&l.root))).collect()
+    // A requirements*.txt next to a Python lockfile only repeats it with less exact versions. It
+    // is skipped only when the lockfile names every package in it, so a decoy lockfile can't hide one.
+    let locks: Vec<&Lockfile> = found.values().filter(|l| l.ecosystem == "PyPI" && !is_requirements(&l.path)).collect();
+    let covered: Vec<PathBuf> = found
+        .values()
+        .filter(|r| is_requirements(&r.path))
+        .filter(|r| {
+            let Ok(text) = std::fs::read_to_string(&r.path) else { return false };
+            let names = crate::inventory::manifest::requirement_pins(&text).0.into_keys().collect::<Vec<_>>();
+            locks.iter().filter(|l| l.root == r.root).any(|l| locks_all(&l.path, &names))
+        })
+        .map(|r| r.path.clone())
+        .collect();
+    found.into_values().filter(|l| !covered.contains(&l.path)).collect()
+}
+
+/// Whether a uv/poetry/pdm/Pipfile lockfile names every one of `names` (PEP 503 normalized).
+/// Those files spell a package as `name = "x"` or `"x": {`, so a quoted name is enough.
+fn locks_all(lock: &Path, names: &[String]) -> bool {
+    let Ok(text) = std::fs::read_to_string(lock) else { return false };
+    let text = text.to_lowercase();
+    names.iter().all(|n| text.contains(&format!("\"{n}\"")) || text.contains(&format!("\"{}\"", n.replace('-', "_"))))
 }
 
 fn is_requirements(path: &Path) -> bool {
@@ -121,15 +140,16 @@ mod tests {
         touch(r, "g/ignored/uv.lock");
         touch(r, "g/kept/uv.lock");
         touch(r, "g/kept/pyproject.toml");
-        touch(r, "g/kept/requirements.txt"); // repeats uv.lock
-        touch(r, "g/kept/requirements-gpu.txt");
+        fs::write(r.join("g/kept/uv.lock"), "[[package]]\nname = \"pillow\"\nversion = \"12.1.0\"\n").unwrap();
+        fs::write(r.join("g/kept/requirements.txt"), "Pillow>=10.0\n").unwrap(); // repeats uv.lock
+        fs::write(r.join("g/kept/requirements-gpu.txt"), "pillow\nevil-pkg==1.0\n").unwrap(); // not in uv.lock
 
         let excl: Vec<String> = ["node_modules", "archive*"].iter().map(|s| s.to_string()).collect();
         let found = discover(&[r.to_path_buf()], &excl);
         let rel: Vec<_> = found.iter().map(|l| l.path.strip_prefix(r).unwrap().to_str().unwrap().to_string()).collect();
         assert_eq!(
             rel,
-            ["a/package-lock.json", "d/requirements-dev.txt", "e/go.mod", "f/Cargo.lock", "g/kept/uv.lock"]
+            ["a/package-lock.json", "d/requirements-dev.txt", "e/go.mod", "f/Cargo.lock", "g/kept/requirements-gpu.txt", "g/kept/uv.lock"]
         );
         assert_eq!(found[0].ecosystem, "npm");
         assert_eq!(found[0].manifest, Some(r.join("a/package.json")));
@@ -137,7 +157,7 @@ mod tests {
         assert_eq!(found[1].manifest, Some(r.join("d/requirements-dev.txt")));
         assert_eq!(found[2].manifest, Some(r.join("e/go.mod")));
         assert_eq!(found[3].manifest, None);
-        assert_eq!(found[4].manifest, Some(r.join("g/kept/pyproject.toml")));
+        assert_eq!(found[5].manifest, Some(r.join("g/kept/pyproject.toml")));
     }
 
     #[test]

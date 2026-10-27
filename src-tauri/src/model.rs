@@ -67,7 +67,7 @@ pub struct Lockfile {
 }
 
 /// One advisory group (aliases merged) as it applies to one installed package version.
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct VulnGroup {
     /// Canonical id: CVE > GHSA > first ecosystem id.
     pub id: String,

@@ -106,7 +106,9 @@ fn is_requirements(path: &Path) -> bool {
 
 /// osv-scanner reads `Pillow>=10.0` as Pillow 10.0 installed. Only an exact `==` pin names the
 /// installed version, so packages from other lines become estimated. Packages that come in
-/// through `-r requirements.txt` are dropped: that file is scanned on its own.
+/// through `-r requirements.txt` are dropped, because that file is scanned on its own. This only
+/// applies to an include in the same folder (always discovered too), never to a malicious package:
+/// a repository must not be able to hide a package by pointing `-r` somewhere else.
 fn refine_requirements(scan: &mut LockfileScan) {
     if !is_requirements(&scan.lockfile) {
         return;
@@ -116,8 +118,9 @@ fn refine_requirements(scan: &mut LockfileScan) {
     let dir = scan.lockfile.parent().unwrap_or(Path::new(""));
     let included: HashSet<String> = includes
         .iter()
+        .map(|f| Path::new(f.trim_start_matches("./")))
+        .filter(|f| f.components().count() == 1 && is_requirements(f))
         .map(|f| dir.join(f))
-        .filter(|p| is_requirements(p))
         .filter_map(|p| std::fs::read_to_string(p).ok())
         .flat_map(|t| requirement_pins(&t).0.into_keys())
         .collect();
@@ -131,7 +134,7 @@ fn refine_requirements(scan: &mut LockfileScan) {
                 p.inferred = !exact;
                 true
             }
-            None => !included.contains(&name),
+            None => !included.contains(&name) || p.vulns.iter().any(|v| v.malicious),
         }
     });
 }
@@ -334,14 +337,21 @@ mod tests {
         let tmp = tempfile::tempdir().unwrap();
         let d = tmp.path();
         std::fs::write(d.join("requirements.txt"), "Pillow>=10.0  # images\nrequests==2.31.0\nflask[async]==2.2.*\nnumpy>=1.0,<2 ; python_version>'3.8'\n").unwrap();
-        std::fs::write(d.join("requirements-dev.txt"), "-r requirements.txt\npytest==8.0.0\n").unwrap();
+        std::fs::write(d.join("requirements-dev.txt"), "-r ./requirements.txt\npytest==8.0.0\n").unwrap();
+        std::fs::create_dir_all(d.join("elsewhere")).unwrap();
+        std::fs::write(d.join("elsewhere/requirements.txt"), "evil==1.0\nshady==1.0\n").unwrap();
+        std::fs::write(d.join("requirements-ci.txt"), "-r elsewhere/requirements.txt\n-r requirements.txt\nevil==1.0\n").unwrap();
         let pkg = |name: &str, inferred: bool| ScannedPackage {
             ecosystem: "PyPI".into(),
             name: name.into(),
             version: "1.0".into(),
             dev: false,
             inferred,
-            vulns: vec![],
+            vulns: if name == "flask-mal" {
+                vec![VulnGroup { id: "MAL-2026-1".into(), malicious: true, ..Default::default() }]
+            } else {
+                vec![]
+            },
         };
         let scan = |file: &str, names: &[&str]| {
             let mut s = LockfileScan { lockfile: d.join(file), packages: names.iter().map(|n| pkg(n, false)).collect() };
@@ -358,6 +368,12 @@ mod tests {
             scan("requirements-dev.txt", &["pillow", "requests", "pytest"]),
             own(&[("pytest", false), ("urllib3", true)]),
             "pillow and requests are reported once, by requirements.txt"
+        );
+        // an include outside this folder can't hide anything, and a malicious package is never dropped
+        std::fs::write(d.join("requirements.txt"), "requests==2.31.0\nflask-mal==1.0\n").unwrap();
+        assert_eq!(
+            scan("requirements-ci.txt", &["evil", "shady", "requests", "flask-mal"]),
+            own(&[("evil", false), ("shady", false), ("flask-mal", false), ("urllib3", true)])
         );
     }
 
