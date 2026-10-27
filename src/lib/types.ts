@@ -80,5 +80,6 @@ export interface Settings {
   notify_threshold: Priority;
   show_dev: boolean;
   show_estimated: boolean;
+  private_mode: boolean;
   launch_at_login: boolean;
 }

@@ -1,6 +1,6 @@
 use crate::inventory::manifest::normalize_pypi;
 use crate::model::{LockfileScan, ScannedPackage};
-use crate::scan::lockfile::{parse_output, scan_lockfiles};
+use crate::scan::lockfile::{parse_output, scan_lockfiles, Offline};
 use crate::store::FindingInput;
 use std::path::{Path, PathBuf};
 use std::process::Stdio;
@@ -62,13 +62,16 @@ struct Source {
 /// osv-scanner reads the installed artifacts (`--x-plugins`, with `--no-ignore` because
 /// /opt/homebrew is a git checkout whose .gitignore hides everything). Any failed scan
 /// makes the whole call an error so the caller keeps the previous results.
-pub async fn global_findings(osv_scanner: &Path) -> Result<Vec<FindingInput>, String> {
+pub async fn global_findings(osv_scanner: &Path, offline: Option<&Offline>) -> Result<Vec<FindingInput>, String> {
     let mut out = Vec::new();
     let mut errors = Vec::new();
     for src in sources().await {
+        // installed artifacts can hold other ecosystems (npm packages ship Go binaries), so let
+        // osv-scanner fetch whatever it needs; globals only run in the daily full scan
+        let offline = offline.map(|o| (o, true));
         let scans = match src.kind {
-            Kind::CargoCrates => scan_crates(osv_scanner, &src.dir).await,
-            _ => run_osv(osv_scanner, &src.dir, src.kind.plugins()).await,
+            Kind::CargoCrates => scan_crates(osv_scanner, &src.dir, offline).await,
+            _ => run_osv(osv_scanner, &src.dir, src.kind.plugins(), offline).await,
         };
         match scans {
             Ok(scans) => out.extend(findings_from(src.kind, &src.dir, &scans)),
@@ -127,9 +130,12 @@ async fn cmd_stdout(bin: &str, args: &[&str]) -> Option<String> {
 
 /// `taskpolicy -b <osv> scan source -r <dir> --no-ignore --x-no-default-plugins --x-plugins <plugins>`.
 /// Exit 0 and 1 are success, 128 = nothing found.
-async fn run_osv(osv_scanner: &Path, dir: &Path, plugins: &str) -> Result<Vec<LockfileScan>, String> {
+async fn run_osv(osv_scanner: &Path, dir: &Path, plugins: &str, offline: Option<(&Offline, bool)>) -> Result<Vec<LockfileScan>, String> {
     let mut cmd = tokio::process::Command::new("/usr/sbin/taskpolicy");
     cmd.arg("-b").arg(osv_scanner).args(["scan", "source", "-r"]).arg(dir);
+    if let Some((o, download)) = offline {
+        o.apply(&mut cmd, download);
+    }
     cmd.args(["--no-ignore", "--x-no-default-plugins", "--x-plugins", plugins, "--format", "json", "--verbosity", "error"])
         .stdin(Stdio::null())
         .kill_on_drop(true);
@@ -137,6 +143,9 @@ async fn run_osv(osv_scanner: &Path, dir: &Path, plugins: &str) -> Result<Vec<Lo
         .await
         .map_err(|_| "osv-scanner timed out".to_string())?
         .map_err(|e| format!("failed to run osv-scanner: {e}"))?;
+    if offline.is_some() && Offline::missing_db(&String::from_utf8_lossy(&out.stderr)) {
+        return Err("an offline vulnerability database could not be downloaded".into());
+    }
     match out.status.code() {
         Some(0 | 1) => parse_output(&String::from_utf8_lossy(&out.stdout)),
         Some(128) => Ok(vec![]),
@@ -150,7 +159,7 @@ async fn run_osv(osv_scanner: &Path, dir: &Path, plugins: &str) -> Result<Vec<Lo
 
 /// `cargo install` records what it installed in ~/.cargo/.crates2.json, but the binaries carry no
 /// dependency data, so the crates become a throwaway Cargo.lock for osv-scanner.
-async fn scan_crates(osv_scanner: &Path, bin_dir: &Path) -> Result<Vec<LockfileScan>, String> {
+async fn scan_crates(osv_scanner: &Path, bin_dir: &Path, offline: Option<(&Offline, bool)>) -> Result<Vec<LockfileScan>, String> {
     let Some(cargo_home) = bin_dir.parent() else { return Ok(vec![]) };
     let Ok(json) = std::fs::read_to_string(cargo_home.join(".crates2.json")) else { return Ok(vec![]) };
     let crates = parse_crates2(&json)?;
@@ -161,7 +170,7 @@ async fn scan_crates(osv_scanner: &Path, bin_dir: &Path) -> Result<Vec<LockfileS
     std::fs::create_dir_all(&dir).map_err(|e| e.to_string())?;
     let lock = dir.join("Cargo.lock");
     let result = match std::fs::write(&lock, synthetic_cargo_lock(&crates)) {
-        Ok(()) => scan_lockfiles(osv_scanner, &[lock]).await,
+        Ok(()) => scan_lockfiles(osv_scanner, &[lock], offline).await,
         Err(e) => Err(e.to_string()),
     };
     let _ = std::fs::remove_dir_all(&dir);
@@ -402,7 +411,7 @@ mod tests {
     async fn v2inv_live_globals() {
         let osv = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("binaries/osv-scanner-aarch64-apple-darwin");
         let start = std::time::Instant::now();
-        let f = global_findings(&osv).await.expect("global scan");
+        let f = global_findings(&osv, None).await.expect("global scan");
         let mut by_project = std::collections::BTreeMap::new();
         for x in &f {
             *by_project.entry(x.project_name.clone()).or_insert(0) += 1;

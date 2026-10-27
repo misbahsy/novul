@@ -1,22 +1,33 @@
 // Owner: feeds agent.
 use crate::model::RuntimeStatus;
 use serde_json::Value;
+use std::collections::HashMap;
 use std::time::Duration;
 
-/// Check one runtime against https://endoflife.date/api/v1/products/<product>/
-/// (node->nodejs, python->python, php->php, go->go, ruby->ruby). Network errors give a
-/// status with cycle/latest = None rather than an Err.
-pub async fn check(client: &reqwest::Client, kind: &str, version: &str, path: &str) -> RuntimeStatus {
-    let doc = match product(kind) {
-        Some(p) => fetch(client, p).await,
-        None => Err(format!("no endoflife.date product for {kind}")),
-    };
-    match doc {
-        Ok(doc) => parse_release(&doc, kind, version, path),
-        Err(e) => {
-            log::warn!("eol check for {kind} {version}: {e}");
-            status(kind, version, path)
+const PRODUCTS: [&str; 5] = ["nodejs", "python", "php", "go", "ruby"];
+
+/// The endoflife.date documents for every runtime NoVul knows
+/// (https://endoflife.date/api/v1/products/<product>/), fetched whether or not it is installed.
+/// A product that fails to load is left out.
+pub async fn fetch_all(client: &reqwest::Client) -> HashMap<&'static str, Value> {
+    let mut out = HashMap::new();
+    for p in PRODUCTS {
+        match fetch(client, p).await {
+            Ok(doc) => {
+                out.insert(p, doc);
+            }
+            Err(e) => log::warn!("endoflife.date {p}: {e}"),
         }
+    }
+    out
+}
+
+/// One runtime's status from `fetch_all`'s documents (node->nodejs, python, php, go, ruby).
+/// A missing document gives a status with cycle/latest = None.
+pub fn check(docs: &HashMap<&'static str, Value>, kind: &str, version: &str, path: &str) -> RuntimeStatus {
+    match product(kind).and_then(|p| docs.get(p)) {
+        Some(doc) => parse_release(doc, kind, version, path),
+        None => status(kind, version, path),
     }
 }
 
@@ -152,14 +163,21 @@ mod tests {
         assert!(is_older("1.26rc1", "1.26.1"));
     }
 
+    #[test]
+    fn missing_document_gives_an_unfilled_status() {
+        let s = check(&HashMap::new(), "node", "25.6.1", "/x");
+        assert_eq!((s.cycle, s.is_eol, s.behind), (None, false, false));
+    }
+
     #[tokio::test]
     #[ignore]
     async fn feeds_live_eol() {
-        let client = reqwest::Client::new();
-        let s = check(&client, "node", "25.6.1", "/x").await;
+        let docs = fetch_all(&reqwest::Client::new()).await;
+        assert_eq!(docs.len(), PRODUCTS.len());
+        let s = check(&docs, "node", "25.6.1", "/x");
         assert_eq!(s.cycle.as_deref(), Some("25"));
         assert!(s.is_eol && s.behind, "{s:?}");
-        let s = check(&client, "python", "3.13.0", "/x").await;
+        let s = check(&docs, "python", "3.13.0", "/x");
         assert!(!s.is_eol && s.behind && s.latest_in_cycle.is_some(), "{s:?}");
     }
 }

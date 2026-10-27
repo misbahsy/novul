@@ -1,6 +1,6 @@
 # NoVul
 
-A menu bar app that keeps an eye on everything you've installed on your Mac and tells you what to fix.
+NoVul is a menu bar app for your Mac. It finds the security problems in the software on your Mac and tells you how to repair them.
 
 <p>
   <a href="https://github.com/misbahsy/novul/releases/latest/download/NoVul-arm64.dmg"><img alt="Download for macOS" src="https://img.shields.io/badge/Download_for_macOS-Apple_Silicon-3ee6c4?style=for-the-badge&logo=apple&logoColor=white&labelColor=0e1220"></a>
@@ -11,12 +11,15 @@ A menu bar app that keeps an eye on everything you've installed on your Mac and 
   <a href="LICENSE"><img alt="License: Apache 2.0" src="https://img.shields.io/badge/license-Apache_2.0-555"></a>
 </p>
 
-NoVul finds the projects on your Mac and checks every locked dependency against public vulnerability
-data. It also covers your Homebrew packages, language runtimes, global packages and AI coding tools,
-and looks for API keys left in plain-text files. It checks again every 30 minutes and as soon as a
-lockfile changes, and notifies you only when something matters.
+NoVul finds the code projects on your Mac. It compares each package in their lockfiles with public
+vulnerability data. It also examines your Homebrew packages, language runtimes, global packages and AI
+coding tools. It also finds API keys in plain-text files.
 
-Everything runs locally. Nothing about your code or your keys leaves your Mac (see [Privacy](#privacy)).
+NoVul does a new check at 30-minute intervals, and each time that a lockfile changes. It sends a
+notification only for important problems.
+
+All the checks run on your Mac. NoVul does not send your code or your keys to a different computer.
+Refer to [Privacy](#privacy).
 
 ![NoVul: a radar of open issues by project and severity, next to a fix plan ranked by what to fix first](docs/screenshots/main.webp)
 
@@ -26,98 +29,130 @@ Everything runs locally. Nothing about your code or your keys leaves your Mac (s
     <td width="50%"><img src="docs/screenshots/this-mac.webp" alt="This Mac tab: runtimes past end of life and their advisories"></td>
   </tr>
   <tr>
-    <td><b>Fix with agent.</b> Hand the findings to Claude Code or Codex with one prompt.</td>
-    <td><b>This Mac.</b> Runtimes, Homebrew, global installs and AI tools.</td>
+    <td><b>Fix with agent.</b> Send all the problems to Claude Code or Codex in one prompt.</td>
+    <td><b>This Mac.</b> The problems in your runtimes, Homebrew packages, global packages and AI tools.</td>
   </tr>
   <tr>
     <td><img src="docs/screenshots/secrets.webp" alt="Secrets tab: exposed keys with file, line and a one-click permission fix, never the value"></td>
     <td><img src="docs/screenshots/onboarding.webp" alt="First run: NoVul suggests the folders where your code lives"></td>
   </tr>
   <tr>
-    <td><b>Exposed secrets.</b> Where each key is and how to lock it down, never the value.</td>
-    <td><b>First run.</b> Pick the folders where your code lives.</td>
+    <td><b>Exposed secrets.</b> The location of each key and how to make it safe. NoVul does not show the key.</td>
+    <td><b>First start.</b> Select the folders that contain your code.</td>
   </tr>
 </table>
 
-<sub>Screenshots use NoVul's built-in demo data.</sub>
+<sub>The screenshots show the demo data of NoVul.</sub>
 
 ## What it checks
 
-- **Project dependencies.** Lockfiles for npm, pnpm, Yarn, Bun, uv, Poetry, Pipenv, PDM,
-  `requirements*.txt`, Composer, Go, Cargo, Bundler, Dart/Flutter and Mix, matched against
-  [OSV.dev](https://osv.dev).
-- **Homebrew packages** and **global installs** (npm/pnpm/Bun globals, pipx and uv tools,
-  `cargo install`, Go binaries, gems).
-- **Runtimes** (Node, Python, PHP, Go, Ruby, Java), including versions past end of life.
-- **AI coding tools.** Claude Code, Codex and Ollama, and the runtimes bundled inside them.
-- **Exposed secrets.** API keys and tokens in project folders and common config files, found with
-  [gitleaks](https://github.com/gitleaks/gitleaks). NoVul never stores or shows the key itself, only
-  where it is and how to move it somewhere safer. Keys for services that had a recent public breach
-  are ranked higher.
+- **Project packages.** NoVul reads the lockfiles of npm, pnpm, Yarn, Bun, uv, Poetry, Pipenv, PDM,
+  `requirements*.txt`, Composer, Go, Cargo, Bundler, Dart/Flutter and Mix. It compares each package
+  with the data from [OSV.dev](https://osv.dev).
+- **Homebrew packages.**
+- **Global packages.** These are npm, pnpm and Bun global packages, pipx and uv tools,
+  `cargo install` packages, Go binaries and Ruby gems.
+- **Runtimes.** These are Node, Python, PHP, Go, Ruby and Java. NoVul also finds runtime versions
+  that do not get security updates (end of life).
+- **AI coding tools.** These are Claude Code, Codex and Ollama, and the runtimes in them.
+- **Exposed secrets.** NoVul uses [gitleaks](https://github.com/gitleaks/gitleaks) to find API keys
+  and tokens in your project folders and in usual configuration files. NoVul does not keep or show
+  the key. It shows the location of the key and how to move the key to a safe location. A key for a
+  service with a recent public data breach gets a higher priority.
 
-Findings are ranked by what to fix first: **malicious** packages, then vulnerabilities **actively
-exploited** in the wild ([CISA KEV](https://www.cisa.gov/known-exploited-vulnerabilities-catalog)),
-then by severity, with [EPSS](https://www.first.org/epss) exploit likelihood as a tiebreaker. Each
-finding comes with the command that fixes it for that project's package manager.
+NoVul puts the problems in this sequence:
+
+1. **Malicious** packages.
+2. Vulnerabilities that attackers **actively exploit**, from the
+   [CISA KEV](https://www.cisa.gov/known-exploited-vulnerabilities-catalog) list.
+3. All other vulnerabilities, from the highest severity to the lowest. If two vulnerabilities have
+   the same severity, the vulnerability with the higher [EPSS](https://www.first.org/epss) score is first.
+
+For each problem, NoVul gives the command that repairs it with the package manager of that project.
 
 ## Install
 
-Requires a Mac with Apple Silicon and macOS 13 or later.
+You must have a Mac with Apple Silicon and macOS 13 or later.
 
-1. [Download NoVul](https://github.com/misbahsy/novul/releases/latest/download/NoVul-arm64.dmg)
-   (or pick a version under [Releases](https://github.com/misbahsy/novul/releases)), open the DMG and
-   drag NoVul to Applications.
-2. Open it. NoVul asks where your code lives, suggests folders it found, and starts the first scan.
-   Package results arrive in a minute or two; the check for exposed secrets runs right after.
+1. [Download NoVul](https://github.com/misbahsy/novul/releases/latest/download/NoVul-arm64.dmg).
+   For a different version, refer to [Releases](https://github.com/misbahsy/novul/releases).
+2. Open the DMG file.
+3. Drag NoVul to the Applications folder.
+4. Open NoVul.
+5. Select the folders that contain your code. NoVul shows the code folders that it found.
 
-NoVul lives in the menu bar (no Dock icon) and uses about 20 MB of memory while idle. Scans run in a
-separate low-priority process that exits when it's done.
+NoVul starts the first scan. The package results show in approximately 1 to 2 minutes. Then NoVul
+does the check for exposed secrets.
+
+NoVul shows only in the menu bar. It does not show in the Dock. When NoVul does not scan, it
+uses approximately 20 MB of memory. Each scan runs in a separate process with a low priority. The process
+stops when the scan is complete.
 
 ## Use it from your coding agent
 
-NoVul includes a CLI and an MCP server, so Claude Code, Codex or another agent can read the
-findings for the repo it's working in, fix them and ask NoVul to rescan. The app itself has no AI
-features and needs no API keys.
+NoVul has a CLI and an MCP server. Claude Code, Codex or a different agent can use them to:
 
-The quickest way: click **Fix with agent** above the chart. It copies a prompt for Claude Code or
-Codex (or opens one in Terminal) that tells the agent how to read NoVul's findings, fix them project
-by project, run your tests and rescan. Pick a project in the chart first to focus on just that one.
+- Read the problems in its repository.
+- Repair the problems.
+- Tell NoVul to do the scan again.
 
-To connect an agent permanently:
+NoVul does not use AI and does not use API keys.
+
+The fastest method is the **Fix with agent** button above the chart. This button copies a prompt for
+Claude Code or Codex, or opens the prompt in Terminal. The prompt tells the agent to:
+
+1. Read the problems from NoVul.
+2. Repair the problems in each project.
+3. Run your tests.
+4. Tell NoVul to do the scan again.
+
+To send only the problems of one project, select that project in the chart first.
+
+To connect an agent to NoVul for all sessions, run this command:
 
 ```bash
 claude mcp add novul -- /Applications/NoVul.app/Contents/MacOS/novul mcp
 ```
 
+To show the problems of the project in your terminal folder, run this command:
+
 ```bash
 /Applications/NoVul.app/Contents/MacOS/novul findings --project "$PWD"
 ```
 
-`novul scan --all` runs a full scan from the terminal (projects, this Mac, then secrets), the same
-as **Scan Now** in the menu bar.
+To do a full scan from the terminal, run `novul scan --all`. This command does the same scan as
+**Scan Now** in the menu bar: first the projects, then this Mac, then the secrets.
 
-See [agent/setup.md](agent/setup.md) for Codex, OpenCode, the Claude Code skill and an AGENTS.md
-snippet.
+For Codex, OpenCode, the Claude Code skill and an AGENTS.md example, refer to
+[agent/setup.md](agent/setup.md).
 
 ## Privacy
 
-NoVul has no account, no telemetry and no server of its own. It makes these requests:
+NoVul does not use an account. It does not send telemetry. It does not have a server.
 
-| Service | What is sent | Why |
+NoVul downloads most of its data as full lists. These downloads do not send data from your Mac.
+The lists are:
+
+- The CISA list of exploited vulnerabilities.
+- The FIRST EPSS scores for all CVEs.
+- The end-of-life dates for all the runtimes that NoVul knows.
+- The GitHub advisories for all the AI tools that NoVul knows.
+- The Have I Been Pwned list of data breaches.
+
+To find the vulnerabilities in your packages, NoVul has two modes:
+
+| Mode | Data that NoVul sends | Result |
 |---|---|---|
-| [OSV.dev](https://osv.dev) | package names and versions | find known vulnerabilities |
-| [deps.dev](https://deps.dev) | package names and versions from `requirements.txt` files | estimate versions that aren't pinned |
-| [FIRST EPSS](https://www.first.org/epss) | CVE ids | exploit likelihood |
-| [endoflife.date](https://endoflife.date) | runtime names (e.g. `nodejs`) | end-of-life dates |
-| GitHub API | names of public tool repositories | advisories for AI coding tools |
-| CISA, Have I Been Pwned | nothing (public lists are downloaded) | exploited vulnerabilities, recent breaches |
+| **Standard** (default) | The names and versions of your packages go to [OSV.dev](https://osv.dev). This includes your Homebrew packages and the versions of your AI tools. For `requirements.txt` projects, the names and versions also go to [deps.dev](https://deps.dev). | NoVul shows a new advisory in 30 minutes or less. |
+| **Private mode** (in Settings) | No data from your projects. NoVul downloads the OSV databases for your languages (approximately 250 MB, one time each day). Then it compares your packages on your Mac. | NoVul shows a new advisory in one day or less. NoVul does not examine Homebrew packages, because `brew vulns` must be online. |
 
-Your source code, file contents, file paths and secrets are never sent. Results are stored in a local
-SQLite database in `~/Library/Application Support/dev.novul.app/`.
+NoVul does not send your source code, the contents of your files, your file paths or your secrets.
+NoVul keeps the results in a SQLite database on your Mac, in
+`~/Library/Application Support/dev.novul.app/`.
 
 ## Build from source
 
-You need [Rust](https://rustup.rs) and [Bun](https://bun.sh).
+You must have [Rust](https://rustup.rs) and [Bun](https://bun.sh).
 
 ```bash
 bun install
@@ -125,12 +160,16 @@ scripts/fetch-sidecars.sh
 bun run tauri dev
 ```
 
-`fetch-sidecars.sh` downloads the pinned osv-scanner and gitleaks releases and verifies them against
-`sidecars/SHA256SUMS`. `bun run tauri build` builds the app and DMG; `scripts/release.sh` also signs
-and notarizes them (needs an Apple Developer ID). Run the tests with `cargo test --lib` in `src-tauri`.
+- `fetch-sidecars.sh` downloads the correct versions of osv-scanner and gitleaks. It compares each
+  file with `sidecars/SHA256SUMS`.
+- `bun run tauri build` builds the app and the DMG file.
+- `scripts/release.sh` builds, signs and notarizes the app and the DMG file. You must have an Apple
+  Developer ID.
+- To run the tests, go to `src-tauri` and run `cargo test --lib`.
 
 ## License
 
-NoVul is licensed under the [Apache License 2.0](LICENSE). It bundles osv-scanner (Apache 2.0) and
-gitleaks (MIT), and uses data from OSV.dev, CISA, FIRST, Have I Been Pwned (CC BY 4.0) and
-endoflife.date. See [NOTICE](NOTICE) and [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md).
+The license of NoVul is the [Apache License 2.0](LICENSE). NoVul contains osv-scanner (Apache 2.0)
+and gitleaks (MIT). NoVul uses data from OSV.dev, CISA, FIRST, Have I Been Pwned (CC BY 4.0) and
+endoflife.date. For more data, refer to [NOTICE](NOTICE) and
+[THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md).

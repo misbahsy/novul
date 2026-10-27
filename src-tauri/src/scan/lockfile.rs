@@ -5,24 +5,81 @@ use serde_json::Value;
 use std::path::{Path, PathBuf};
 use std::process::Stdio;
 
+/// Private mode: osv-scanner matches against OSV databases downloaded to `dir` instead of sending
+/// package names to the OSV API, and skips deps.dev resolution of requirements.txt.
+#[derive(Clone, Debug)]
+pub struct Offline {
+    pub dir: PathBuf,
+}
+
+/// osv-scanner's per-ecosystem database files are re-downloaded once they are this old.
+const DB_MAX_AGE: std::time::Duration = std::time::Duration::from_secs(24 * 3600);
+
+impl Offline {
+    pub fn new() -> Offline {
+        Offline { dir: dirs::cache_dir().unwrap_or_else(std::env::temp_dir).join("dev.novul.app").join("osv-db") }
+    }
+
+    /// True when a database for one of `ecosystems` is missing or a day old: only then is
+    /// osv-scanner allowed to download (each database is a full file, npm's is about 200 MB).
+    pub fn needs_download<'a>(&self, ecosystems: impl IntoIterator<Item = &'a str>) -> bool {
+        ecosystems.into_iter().any(|eco| {
+            let zip = self.dir.join("osv-scalibr").join(eco).join("all.zip");
+            std::fs::metadata(zip)
+                .and_then(|m| m.modified())
+                .map_or(true, |t| t.elapsed().map_or(true, |age| age > DB_MAX_AGE))
+        })
+    }
+
+    /// osv-scanner says this when a database it needs isn't downloaded. It then stops matching
+    /// partway and still exits 0, so its results can't be trusted.
+    pub fn missing_db(stderr: &str) -> bool {
+        stderr.contains("no offline version of the OSV database")
+    }
+
+    pub fn apply(&self, cmd: &mut tokio::process::Command, download: bool) {
+        cmd.args(["--offline-vulnerabilities", "--no-resolve"]).env("OSV_SCANNER_LOCAL_DB_CACHE_DIRECTORY", &self.dir);
+        if download {
+            cmd.arg("--download-offline-databases");
+        }
+    }
+}
+
 /// Run osv-scanner once over many lockfiles:
 /// `taskpolicy -b <osv_scanner> scan source -L <a> -L <b> ... --all-packages --format json`.
+/// With `offline` (Private mode) it uses local databases, downloading them first when `download`.
 /// Exit codes 0 and 1 are success, 128 = no packages, anything else is an error.
-pub async fn scan_lockfiles(osv_scanner: &Path, lockfiles: &[PathBuf]) -> Result<Vec<LockfileScan>, String> {
+pub async fn scan_lockfiles(osv_scanner: &Path, lockfiles: &[PathBuf], offline: Option<(&Offline, bool)>) -> Result<Vec<LockfileScan>, String> {
     if lockfiles.is_empty() {
         return Ok(vec![]);
     }
+    match run_scan(osv_scanner, lockfiles, offline).await {
+        // a lockfile used an ecosystem whose database isn't downloaded yet
+        Err(e) if e == MISSING_DB => run_scan(osv_scanner, lockfiles, offline.map(|(o, _)| (o, true))).await,
+        r => r,
+    }
+}
+
+const MISSING_DB: &str = "osv-scanner: offline database missing";
+
+async fn run_scan(osv_scanner: &Path, lockfiles: &[PathBuf], offline: Option<(&Offline, bool)>) -> Result<Vec<LockfileScan>, String> {
     let mut cmd = tokio::process::Command::new("/usr/sbin/taskpolicy");
     // -b: background QoS keeps CPU and disk priority low
     cmd.arg("-b").arg(osv_scanner).args(["scan", "source"]);
     for l in lockfiles {
         cmd.arg("-L").arg(l);
     }
+    if let Some((o, download)) = offline {
+        o.apply(&mut cmd, download);
+    }
     cmd.args(["--all-packages", "--format", "json", "--verbosity", "error"])
         .stdin(Stdio::null())
         .kill_on_drop(true);
     let out = cmd.output().await.map_err(|e| format!("failed to run osv-scanner: {e}"))?;
     let stderr = String::from_utf8_lossy(&out.stderr);
+    if offline.is_some() && Offline::missing_db(&stderr) {
+        return Err(MISSING_DB.into());
+    }
     let tail = stderr.lines().rev().take(10).collect::<Vec<_>>().into_iter().rev().collect::<Vec<_>>().join("\n");
     match out.status.code() {
         Some(0 | 1) => parse_output(&String::from_utf8_lossy(&out.stdout)).map_err(|e| format!("{e}: {tail}")),
@@ -158,6 +215,37 @@ pub fn parse_output(json: &str) -> Result<Vec<LockfileScan>, String> {
 
 #[cfg(test)]
 mod tests {
+
+    #[test]
+    fn offline_databases_download_only_when_missing_or_a_day_old() {
+        let tmp = tempfile::tempdir().unwrap();
+        let o = Offline { dir: tmp.path().to_path_buf() };
+        assert!(o.needs_download(["npm"]), "missing");
+        assert!(!o.needs_download(std::iter::empty::<&str>()), "nothing to scan");
+        let zip = tmp.path().join("osv-scalibr/npm/all.zip");
+        std::fs::create_dir_all(zip.parent().unwrap()).unwrap();
+        std::fs::write(&zip, b"x").unwrap();
+        assert!(!o.needs_download(["npm"]), "fresh");
+        assert!(o.needs_download(["npm", "PyPI"]), "one of them missing");
+        let old = std::time::SystemTime::now() - std::time::Duration::from_secs(25 * 3600);
+        std::fs::File::options().write(true).open(&zip).unwrap().set_modified(old).unwrap();
+        assert!(o.needs_download(["npm"]), "a day old");
+    }
+
+    #[test]
+    fn offline_flags_keep_package_names_local() {
+        let o = Offline { dir: PathBuf::from("/db") };
+        let mut cmd = tokio::process::Command::new("osv-scanner");
+        o.apply(&mut cmd, false);
+        let args: Vec<_> = cmd.as_std().get_args().map(|a| a.to_string_lossy().into_owned()).collect();
+        assert_eq!(args, ["--offline-vulnerabilities", "--no-resolve"]);
+        let env: Vec<_> = cmd.as_std().get_envs().map(|(k, v)| (k.to_string_lossy().into_owned(), v.map(|v| v.to_string_lossy().into_owned()))).collect();
+        assert_eq!(env, [("OSV_SCANNER_LOCAL_DB_CACHE_DIRECTORY".to_string(), Some("/db".to_string()))]);
+        let mut cmd = tokio::process::Command::new("osv-scanner");
+        o.apply(&mut cmd, true);
+        assert!(cmd.as_std().get_args().any(|a| a == "--download-offline-databases"));
+    }
+
     use super::*;
 
     const NPM: &str = include_str!("../../tests/fixtures/osv/npm-scan.json");
@@ -256,12 +344,12 @@ mod tests {
 
     #[tokio::test]
     async fn empty_input_skips_the_scanner() {
-        assert_eq!(scan_lockfiles(Path::new("/nonexistent"), &[]).await.unwrap(), vec![]);
+        assert_eq!(scan_lockfiles(Path::new("/nonexistent"), &[], None).await.unwrap(), vec![]);
     }
 
     #[tokio::test]
     async fn spawn_failure_is_an_error() {
-        let err = scan_lockfiles(Path::new("/nonexistent/osv-scanner"), &[PathBuf::from("/x/package-lock.json")]).await.unwrap_err();
+        let err = scan_lockfiles(Path::new("/nonexistent/osv-scanner"), &[PathBuf::from("/x/package-lock.json")], None).await.unwrap_err();
         assert!(err.contains("osv-scanner") || err.contains("invalid"), "{err}");
     }
 
@@ -272,7 +360,7 @@ mod tests {
         let root = Path::new(env!("CARGO_MANIFEST_DIR"));
         let bin = root.join("binaries/osv-scanner-aarch64-apple-darwin");
         let lock = root.join("tests/fixtures/osv/package-lock.json");
-        let scans = scan_lockfiles(&bin, &[lock.clone()]).await.unwrap();
+        let scans = scan_lockfiles(&bin, &[lock.clone()], None).await.unwrap();
         assert_eq!(scans.len(), 1);
         assert_eq!(scans[0].lockfile, lock);
         let lodash = pkg(&scans[0], "lodash");

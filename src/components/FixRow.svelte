@@ -107,13 +107,14 @@
 
   .body { padding: 2px 14px 12px 38px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; animation: rise 0.15s ease; }
   h4 { margin: 8px 0 0; font-size: 10.5px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
-  .tgt { display: grid; gap: 3px; padding: 7px 10px; background: var(--ink); border: 1px solid var(--hair); border-radius: 8px; }
+  .tgt { display: grid; grid-template-columns: minmax(0, 1fr); gap: 3px; padding: 7px 10px; background: var(--ink); border: 1px solid var(--hair); border-radius: 8px; }
   .tline { display: flex; align-items: baseline; gap: 10px; }
   .tline b { font-weight: 600; font-size: 12.5px; }
   .ver { flex: 1; min-width: 0; color: var(--muted); font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .path { color: var(--muted); font-size: 10.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .cmd { display: flex; align-items: center; gap: 10px; margin-top: 2px; }
-  code { flex: 1; min-width: 0; font-size: 11.5px; color: var(--teal); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .cmd { display: flex; align-items: flex-start; gap: 10px; margin-top: 2px; }
+  /* the whole command stays readable: it wraps instead of running out of the box */
+  code { flex: 1; min-width: 0; font-size: 11.5px; line-height: 1.45; color: var(--teal); white-space: pre-wrap; overflow-wrap: anywhere; }
 
   .run { height: 22px; padding: 0 9px; border: 1px solid color-mix(in srgb, var(--teal) 55%, var(--line)); border-radius: 6px; background: none; color: var(--teal); font-size: 11.5px; white-space: nowrap; }
   .run:hover { background: color-mix(in srgb, var(--teal) 14%, transparent); }

@@ -5,7 +5,7 @@ use crate::inventory::{aitools::{tool_findings, BinCache}, globals::global_findi
 use crate::scan::leaks::{project_folders, secret_findings, Cache as SecretCache};
 use crate::inventory::{discover::{discover, ecosystem_for}, manifest::direct_deps, runtimes::detect_runtimes};
 use crate::model::*;
-use crate::scan::{brew::brew_vulns, eol, fix::fix_command, lockfile::scan_lockfiles, osv::querybatch};
+use crate::scan::{brew::brew_vulns, eol, fix::fix_command, lockfile::{scan_lockfiles, Offline}, osv::querybatch};
 use crate::store::{FindingInput, LocationRow, Store};
 use crate::worker::Event;
 use crate::{notify, tray};
@@ -60,6 +60,7 @@ pub fn changed(app: &AppHandle) {
 const KEV_MAX_AGE: i64 = 6 * 3600;
 const DAILY: i64 = 24 * 3600;
 const BATCH: usize = 20;
+const OFFLINE_BATCH: usize = 100;
 const KEY_PAGE: usize = 5000;
 
 type Scanned = (Vec<Lockfile>, Result<Vec<LockfileScan>, String>);
@@ -177,12 +178,13 @@ fn client() -> Result<reqwest::Client, String> {
     reqwest::Client::builder().timeout(Duration::from_secs(30)).build().map_err(|e| e.to_string())
 }
 
-fn spawn_next(set: &mut JoinSet<Scanned>, chunks: &mut impl Iterator<Item = Vec<Lockfile>>, osv: &Path) {
+fn spawn_next(set: &mut JoinSet<Scanned>, chunks: &mut impl Iterator<Item = Vec<Lockfile>>, osv: &Path, offline: &Option<Offline>) {
     if let Some(chunk) = chunks.next() {
-        let osv = osv.to_path_buf();
+        let (osv, offline) = (osv.to_path_buf(), offline.clone());
         set.spawn(async move {
             let paths: Vec<PathBuf> = chunk.iter().map(|l| l.path.clone()).collect();
-            let r = scan_lockfiles(&osv, &paths).await;
+            let download = offline.as_ref().is_some_and(|o| o.needs_download(chunk.iter().map(|l| l.ecosystem.as_str())));
+            let r = scan_lockfiles(&osv, &paths, offline.as_ref().map(|o| (o, download))).await;
             (chunk, r)
         });
     }
@@ -250,7 +252,7 @@ impl Engine {
                     }
                     if reconfigure {
                         let new = self.store.settings();
-                        scan |= new.roots != settings.roots || new.exclusions != settings.exclusions;
+                        scan |= new.roots != settings.roots || new.exclusions != settings.exclusions || new.private_mode != settings.private_mode;
                         settings = new;
                         _watcher = self.watch(&settings);
                         next = Instant::now() + Duration::from_secs(settings.interval_minutes.max(1) * 60);
@@ -386,7 +388,10 @@ impl Job<'_> {
         self.scan_batches(found, true, &mut errors).await;
         self.lap("lockfiles (osv-scanner)", &mut t);
         (self.report)(Event::progress(None, "machine"));
-        self.brew(&mut errors).await;
+        // `brew vulns` always asks the OSV API and has no offline mode
+        if !s.private_mode {
+            self.brew(&mut errors).await;
+        }
         self.lap("brew", &mut t);
         self.runtimes(&mut errors).await;
         self.lap("runtimes", &mut t);
@@ -395,8 +400,10 @@ impl Job<'_> {
         self.refresh_kev(&mut errors).await;
         self.refresh_epss(&mut errors).await;
         self.lap("kev+epss", &mut t);
-        if let Err(e) = self.check_osv(true).await {
-            errors.push(e);
+        if !s.private_mode {
+            if let Err(e) = self.check_osv(true).await {
+                errors.push(e);
+            }
         }
         self.lap("osv recheck", &mut t);
         let tm = now();
@@ -445,6 +452,11 @@ impl Job<'_> {
 
     pub async fn tick(&self) {
         let mut errors = vec![];
+        // Private mode has no live OSV check between daily scans: the databases refresh with those
+        if self.store.settings().private_mode {
+            self.refresh_kev(&mut errors).await;
+            return self.finish(errors);
+        }
         match self.check_osv(false).await {
             Ok((paths, deferred)) => {
                 if !paths.is_empty() {
@@ -460,6 +472,10 @@ impl Job<'_> {
         }
         self.refresh_kev(&mut errors).await;
         self.finish(errors);
+    }
+
+    fn offline(&self) -> Option<Offline> {
+        self.store.settings().private_mode.then(Offline::new)
     }
 
     pub async fn rescan_pass(&self, paths: Vec<String>) {
@@ -504,10 +520,13 @@ impl Job<'_> {
         };
         let total = lockfiles.len();
         let mut done = 0;
-        let mut chunks = lockfiles.chunks(BATCH).map(|c| c.to_vec()).collect::<Vec<_>>().into_iter();
+        let offline = self.offline();
+        // offline, each osv-scanner process loads the databases (npm's alone takes ~5 s), so fewer, bigger batches
+        let size = if offline.is_some() { OFFLINE_BATCH } else { BATCH };
+        let mut chunks = lockfiles.chunks(size).map(|c| c.to_vec()).collect::<Vec<_>>().into_iter();
         let mut set = JoinSet::new();
         for _ in 0..2 {
-            spawn_next(&mut set, &mut chunks, &osv);
+            spawn_next(&mut set, &mut chunks, &osv, &offline);
         }
         while let Some(joined) = set.join_next().await {
             match joined {
@@ -524,7 +543,7 @@ impl Job<'_> {
             if progress {
                 (self.report)(Event::progress(Some((done, total)), "packages"));
             }
-            spawn_next(&mut set, &mut chunks, &osv);
+            spawn_next(&mut set, &mut chunks, &osv, &offline);
         }
     }
 
@@ -709,14 +728,15 @@ impl Job<'_> {
             Err(e) => errors.push(format!("{kind}: {e}")),
         };
         let mut t = StdInstant::now();
-        sync("global", global_findings(&dir.join("osv-scanner")).await);
+        let offline = self.offline();
+        sync("global", global_findings(&dir.join("osv-scanner"), offline.as_ref()).await);
         self.lap("  globals", &mut t);
         let client = match client() {
             Ok(c) => c,
             Err(e) => return sync("tool", Err(e)),
         };
         let mut bins = BinCache::load(self.store.meta("aitools_cache"));
-        let tools = tool_findings(&client, &mut bins).await;
+        let tools = tool_findings(&client, &mut bins, offline.is_some()).await;
         let _ = self.store.set_meta("aitools_cache", &bins.dump());
         sync("tool", tools);
         self.lap("  ai tools", &mut t);
@@ -728,10 +748,9 @@ impl Job<'_> {
             Ok(c) => c,
             Err(e) => return errors.push(e),
         };
-        let mut statuses = vec![];
-        for (kind, version, path) in detected {
-            statuses.push(eol::check(&client, &kind, &version, &path).await);
-        }
+        // every product is fetched, installed or not, so the requests say nothing about this Mac
+        let docs = eol::fetch_all(&client).await;
+        let statuses: Vec<RuntimeStatus> = detected.iter().map(|(kind, version, path)| eol::check(&docs, kind, version, path)).collect();
         let inputs: Vec<FindingInput> = statuses.iter().filter_map(runtime_finding).collect();
         let _ = self.store.set_runtimes(&statuses);
         if let Err(e) = self.store.sync_kind("runtime", &inputs, now()) {

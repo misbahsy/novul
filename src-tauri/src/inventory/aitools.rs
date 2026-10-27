@@ -131,7 +131,11 @@ struct Adv {
 /// Advisories come from OSV (npm, Go, crates.io) and from each project's GitHub security
 /// advisories, because OSV lacks Claude Code's and Bun's. A failed lookup fails the whole call
 /// so the caller keeps the previous results.
-pub async fn tool_findings(client: &reqwest::Client, cache: &mut BinCache) -> Result<Vec<FindingInput>, String> {
+///
+/// GitHub advisories are fetched for every known tool whether or not it is installed, so those
+/// requests say nothing about this Mac. OSV lookups send the installed versions, so `private`
+/// (Private mode) skips them and relies on the GitHub advisories alone.
+pub async fn tool_findings(client: &reqwest::Client, cache: &mut BinCache, private: bool) -> Result<Vec<FindingInput>, String> {
     let installs = detect(cache).await;
     if installs.is_empty() {
         return Ok(vec![]);
@@ -147,13 +151,15 @@ pub async fn tool_findings(client: &reqwest::Client, cache: &mut BinCache) -> Re
         }
         keys.extend(i.crates.iter().map(|(n, v)| key("crates.io", n, v)));
     }
-    let ids = osv::querybatch(client, &keys).await?;
-    let records = fetch_osv_records(client, &ids).await?;
+    let (ids, records) = if private {
+        (HashMap::new(), HashMap::new())
+    } else {
+        let ids = osv::querybatch(client, &keys).await?;
+        let records = fetch_osv_records(client, &ids).await?;
+        (ids, records)
+    };
 
-    let mut repos: BTreeSet<&str> = installs.iter().filter_map(|i| i.tool.github.map(|g| g.0)).collect();
-    if installs.iter().any(|i| i.bun.is_some()) {
-        repos.insert(BUN_REPO);
-    }
+    let repos: BTreeSet<&str> = TOOLS.iter().filter_map(|t| t.github.map(|g| g.0)).chain([BUN_REPO]).collect();
     let github = fetch_github(client, repos).await?;
 
     let osv_advs = |k: &PackageKey| -> Vec<Adv> {
@@ -900,7 +906,7 @@ mod tests {
             println!("{} {} active={} bun={:?} crates={} {}", i.tool.name, i.version, i.active, i.bun, i.crates.len(), i.path.display());
         }
         println!("detect {:?}", start.elapsed());
-        let f = tool_findings(&client, &mut BinCache::default()).await.expect("tool findings");
+        let f = tool_findings(&client, &mut BinCache::default(), false).await.expect("tool findings");
         for x in &f {
             println!("{} {} {} score={:?} fixed={:?} | {}", x.name, x.installed_version, x.group_id, x.score, x.fixed_version, x.summary);
         }

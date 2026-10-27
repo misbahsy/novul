@@ -379,6 +379,7 @@ let settings: Settings = {
   notify_threshold: "high",
   show_dev: false,
   show_estimated: false,
+  private_mode: false,
   launch_at_login: true,
 };
 

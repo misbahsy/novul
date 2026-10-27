@@ -2473,6 +2473,7 @@ version = "0.1.0"
 dependencies = [
  "base64 0.23.1",
  "dirs 7.0.0",
+ "flate2",
  "ignore",
  "libmimalloc-sys",
  "log",

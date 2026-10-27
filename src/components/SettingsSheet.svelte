@@ -79,7 +79,7 @@
           <h3>Check for new advisories<Info
             text="How often NoVul asks OSV.dev whether a newly published vulnerability affects your packages. Only package names and versions are sent; it takes a few seconds. Changed lockfiles are rescanned immediately anyway, and a full rescan runs once a day."
             tip="30 min" /></h3>
-          <p class="hint">Only names and versions leave your Mac.</p>
+          <p class="hint">{draft.private_mode ? "Private mode: nothing leaves your Mac." : "Only names and versions leave your Mac."}</p>
         </div>
         <div class="seg">{#each intervals as m}<button class:on={draft.interval_minutes === m} onclick={() => (draft!.interval_minutes = m)}>{m} min</button>{/each}</div>
       </section>
@@ -104,6 +104,12 @@
         <Info
           text="Python projects that only have a requirements.txt don't record every package version, so NoVul estimates the rest, and the installed version may differ. Estimated findings are hidden from counts, the menu bar and notifications unless this is on. Malicious or actively exploited ones always show. Pin versions with a lockfile (uv, poetry, pip-tools) for exact results."
           tip="off, until you pin versions with a lockfile" />
+      </div>
+      <div class="check">
+        <label><input type="checkbox" bind:checked={draft.private_mode} /> Private mode: check packages on this Mac only</label>
+        <Info
+          text="Normally NoVul sends package names and versions to OSV.dev to look up vulnerabilities. In Private mode it downloads OSV's databases for the languages you use instead (about 250 MB, refreshed daily) and checks everything on this Mac, so nothing about your projects is sent. New advisories then show up within a day instead of 30 minutes, and Homebrew isn't checked, because that check only works online."
+          tip="off, for the fastest updates" />
       </div>
       <div class="check">
         <label><input type="checkbox" bind:checked={draft.launch_at_login} /> Start NoVul when I log in</label>

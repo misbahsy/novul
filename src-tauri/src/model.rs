@@ -213,6 +213,10 @@ pub struct Settings {
     /// Include findings whose version osv-scanner guessed (e.g. requirements.txt).
     #[serde(default)]
     pub show_estimated: bool,
+    /// Match packages against downloaded OSV databases instead of sending names and versions to
+    /// OSV.dev; also skips deps.dev and Homebrew (`brew vulns` only works online).
+    #[serde(default)]
+    pub private_mode: bool,
     pub launch_at_login: bool,
 }
 
@@ -241,6 +245,7 @@ impl Default for Settings {
             notify_threshold: Priority::High,
             show_dev: false,
             show_estimated: false,
+            private_mode: false,
             launch_at_login: false,
         }
     }
