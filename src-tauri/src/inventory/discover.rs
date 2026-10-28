@@ -1,3 +1,4 @@
+use crate::inventory::manifest;
 use crate::model::Lockfile;
 use ignore::WalkBuilder;
 use std::collections::BTreeMap;
@@ -72,27 +73,40 @@ pub fn discover(roots: &[PathBuf], exclusions: &[String]) -> Vec<Lockfile> {
         }
     }
     // A requirements*.txt next to a Python lockfile only repeats it with less exact versions. It
-    // is skipped only when the lockfile names every package in it, so a decoy lockfile can't hide one.
+    // is skipped only when it names packages and nothing else, and a lockfile installs all of them,
+    // so a decoy lockfile can't hide a package.
     let locks: Vec<&Lockfile> = found.values().filter(|l| l.ecosystem == "PyPI" && !is_requirements(&l.path)).collect();
     let covered: Vec<PathBuf> = found
         .values()
         .filter(|r| is_requirements(&r.path))
         .filter(|r| {
             let Ok(text) = std::fs::read_to_string(&r.path) else { return false };
-            let names = crate::inventory::manifest::requirement_pins(&text).0.into_keys().collect::<Vec<_>>();
-            locks.iter().filter(|l| l.root == r.root).any(|l| locks_all(&l.path, &names))
+            let (pins, includes) = manifest::requirement_pins(&text);
+            if pins.is_empty() || !includes.is_empty() || !manifest::requirements_fully_named(&text) {
+                return false;
+            }
+            locks
+                .iter()
+                .filter(|l| l.root == r.root)
+                .filter_map(|l| manifest::lock_package_names(&l.path))
+                .any(|installed| pins.keys().all(|n| installed.contains(n)))
         })
         .map(|r| r.path.clone())
         .collect();
     found.into_values().filter(|l| !covered.contains(&l.path)).collect()
 }
 
-/// Whether a uv/poetry/pdm/Pipfile lockfile names every one of `names` (PEP 503 normalized).
-/// Those files spell a package as `name = "x"` or `"x": {`, so a quoted name is enough.
-fn locks_all(lock: &Path, names: &[String]) -> bool {
-    let Ok(text) = std::fs::read_to_string(lock) else { return false };
-    let text = text.to_lowercase();
-    names.iter().all(|n| text.contains(&format!("\"{n}\"")) || text.contains(&format!("\"{}\"", n.replace('-', "_"))))
+/// The files `discover` finds directly in `dir`: same ignore rules, and a symlink is not a file.
+pub fn visible_files(dir: &Path) -> Vec<PathBuf> {
+    WalkBuilder::new(dir)
+        .max_depth(Some(1))
+        .require_git(false)
+        .git_global(false)
+        .build()
+        .flatten()
+        .filter(|e| e.depth() == 1 && e.file_type().is_some_and(|t| t.is_file()))
+        .map(|e| e.into_path())
+        .collect()
 }
 
 fn is_requirements(path: &Path) -> bool {
@@ -140,16 +154,30 @@ mod tests {
         touch(r, "g/ignored/uv.lock");
         touch(r, "g/kept/uv.lock");
         touch(r, "g/kept/pyproject.toml");
-        fs::write(r.join("g/kept/uv.lock"), "[[package]]\nname = \"pillow\"\nversion = \"12.1.0\"\n").unwrap();
+        // a mention of evil-pkg outside a [[package]] entry doesn't make it installed
+        fs::write(r.join("g/kept/uv.lock"), "# \"evil-pkg\"\n[[package]]\nname = \"pillow\"\nversion = \"12.1.0\"\n").unwrap();
         fs::write(r.join("g/kept/requirements.txt"), "Pillow>=10.0\n").unwrap(); // repeats uv.lock
         fs::write(r.join("g/kept/requirements-gpu.txt"), "pillow\nevil-pkg==1.0\n").unwrap(); // not in uv.lock
+        fs::write(r.join("g/kept/requirements-git.txt"), "pillow\n-e git+https://example.com/x.git#egg=x\n").unwrap();
+        fs::write(r.join("g/kept/requirements-inc.txt"), "pillow\n-r ../other.txt\n").unwrap();
+        fs::write(r.join("g/kept/requirements-empty.txt"), "# nothing\n").unwrap();
 
         let excl: Vec<String> = ["node_modules", "archive*"].iter().map(|s| s.to_string()).collect();
         let found = discover(&[r.to_path_buf()], &excl);
         let rel: Vec<_> = found.iter().map(|l| l.path.strip_prefix(r).unwrap().to_str().unwrap().to_string()).collect();
         assert_eq!(
             rel,
-            ["a/package-lock.json", "d/requirements-dev.txt", "e/go.mod", "f/Cargo.lock", "g/kept/requirements-gpu.txt", "g/kept/uv.lock"]
+            [
+                "a/package-lock.json",
+                "d/requirements-dev.txt",
+                "e/go.mod",
+                "f/Cargo.lock",
+                "g/kept/requirements-empty.txt",
+                "g/kept/requirements-git.txt",
+                "g/kept/requirements-gpu.txt",
+                "g/kept/requirements-inc.txt",
+                "g/kept/uv.lock"
+            ]
         );
         assert_eq!(found[0].ecosystem, "npm");
         assert_eq!(found[0].manifest, Some(r.join("a/package.json")));
@@ -157,7 +185,7 @@ mod tests {
         assert_eq!(found[1].manifest, Some(r.join("d/requirements-dev.txt")));
         assert_eq!(found[2].manifest, Some(r.join("e/go.mod")));
         assert_eq!(found[3].manifest, None);
-        assert_eq!(found[5].manifest, Some(r.join("g/kept/pyproject.toml")));
+        assert_eq!(found[8].manifest, Some(r.join("g/kept/pyproject.toml")));
     }
 
     #[test]

@@ -1,5 +1,6 @@
 use crate::model::Lockfile;
 use std::collections::{HashMap, HashSet};
+use std::path::Path;
 
 /// PEP 503: lowercase, runs of `-_.` become `-`.
 pub fn normalize_pypi(name: &str) -> String {
@@ -103,6 +104,39 @@ pub fn requirement_pins(text: &str) -> (HashMap<String, bool>, Vec<String>) {
         pins.insert(normalize_pypi(name), exact);
     }
     (pins, includes)
+}
+
+/// pip options that choose where packages come from, not which ones are installed.
+const INDEX_OPTIONS: [&str; 9] =
+    ["--index-url", "--extra-index-url", "-i ", "--find-links", "-f ", "--trusted-host", "--pre", "--prefer-binary", "--only-binary"];
+
+/// Whether every requirement line of a requirements file names a package. Options, includes,
+/// editable and bare-URL lines can install packages that the names don't show.
+pub fn requirements_fully_named(text: &str) -> bool {
+    text.lines()
+        .map(|l| l.split(" #").next().unwrap_or("").trim())
+        .filter(|l| !l.is_empty() && !l.starts_with('#'))
+        .filter(|l| !INDEX_OPTIONS.iter().any(|o| l.starts_with(o)))
+        .all(|l| requirement_name(l).is_some())
+}
+
+/// PEP 503 names of the packages a uv/poetry/pdm lock (`[[package]]`), pylock.toml
+/// (`[[packages]]`) or Pipfile.lock (`default`/`develop` keys) installs. None when unreadable.
+pub fn lock_package_names(lock: &Path) -> Option<HashSet<String>> {
+    let text = std::fs::read_to_string(lock).ok()?;
+    let names: Vec<String> = if lock.file_name().is_some_and(|n| n == "Pipfile.lock") {
+        let v: serde_json::Value = serde_json::from_str(&text).ok()?;
+        ["default", "develop"].iter().filter_map(|k| v[*k].as_object()).flat_map(|o| o.keys().cloned()).collect()
+    } else {
+        let v = parse_toml(&text)?;
+        ["package", "packages"]
+            .iter()
+            .filter_map(|k| v.get(*k).and_then(|p| p.as_array()))
+            .flatten()
+            .filter_map(|p| p.get("name").and_then(|n| n.as_str()).map(String::from))
+            .collect()
+    };
+    Some(names.iter().map(|n| normalize_pypi(n)).collect())
 }
 
 fn requirements_txt(text: &str) -> Vec<String> {
@@ -235,6 +269,25 @@ mod tests {
             v.sort();
             v
         })
+    }
+
+    #[test]
+    fn requirements_that_only_name_packages() {
+        assert!(requirements_fully_named("# torch\n--extra-index-url https://download.pytorch.org/whl/cu128\ntorch==2.7 ; sys_platform == 'linux'\nPillow>=10\n"));
+        assert!(!requirements_fully_named("pillow\n-e git+https://example.com/x.git#egg=x\n"));
+        assert!(!requirements_fully_named("pillow\nhttps://example.com/x-1.0.whl\n"));
+        assert!(!requirements_fully_named("pillow\n-r other.txt\n"));
+    }
+
+    #[test]
+    fn lock_names_come_from_package_entries_only() {
+        let dir = tempfile::tempdir().unwrap();
+        let uv = dir.path().join("uv.lock");
+        std::fs::write(&uv, "# \"evil\"\n[[package]]\nname = \"Pillow\"\nversion = \"12.1.0\"\n[package.metadata]\nrequires-dist = [{ name = \"evil\" }]\n").unwrap();
+        assert_eq!(lock_package_names(&uv).unwrap(), HashSet::from(["pillow".to_string()]));
+        let pipfile = dir.path().join("Pipfile.lock");
+        std::fs::write(&pipfile, r#"{"_meta":{"evil":1},"default":{"requests":{}},"develop":{"Py_Test":{}}}"#).unwrap();
+        assert_eq!(lock_package_names(&pipfile).unwrap(), HashSet::from(["requests".to_string(), "py-test".to_string()]));
     }
 
     #[test]

@@ -107,8 +107,8 @@ fn is_requirements(path: &Path) -> bool {
 /// osv-scanner reads `Pillow>=10.0` as Pillow 10.0 installed. Only an exact `==` pin names the
 /// installed version, so packages from other lines become estimated. Packages that come in
 /// through `-r requirements.txt` are dropped, because that file is scanned on its own. This only
-/// applies to an include in the same folder (always discovered too), never to a malicious package:
-/// a repository must not be able to hide a package by pointing `-r` somewhere else.
+/// applies to an include that discovery also finds (same folder, not ignored, not a symlink), and
+/// never to a malicious package: a repository must not be able to hide a package through `-r`.
 fn refine_requirements(scan: &mut LockfileScan) {
     if !is_requirements(&scan.lockfile) {
         return;
@@ -116,11 +116,11 @@ fn refine_requirements(scan: &mut LockfileScan) {
     let Ok(text) = std::fs::read_to_string(&scan.lockfile) else { return };
     let (own, includes) = requirement_pins(&text);
     let dir = scan.lockfile.parent().unwrap_or(Path::new(""));
+    let visible = if includes.is_empty() { vec![] } else { crate::inventory::discover::visible_files(dir) };
     let included: HashSet<String> = includes
         .iter()
-        .map(|f| Path::new(f.trim_start_matches("./")))
-        .filter(|f| f.components().count() == 1 && is_requirements(f))
-        .map(|f| dir.join(f))
+        .map(|f| dir.join(f.trim_start_matches("./")))
+        .filter(|p| is_requirements(p) && visible.contains(p))
         .filter_map(|p| std::fs::read_to_string(p).ok())
         .flat_map(|t| requirement_pins(&t).0.into_keys())
         .collect();
@@ -340,7 +340,11 @@ mod tests {
         std::fs::write(d.join("requirements-dev.txt"), "-r ./requirements.txt\npytest==8.0.0\n").unwrap();
         std::fs::create_dir_all(d.join("elsewhere")).unwrap();
         std::fs::write(d.join("elsewhere/requirements.txt"), "evil==1.0\nshady==1.0\n").unwrap();
-        std::fs::write(d.join("requirements-ci.txt"), "-r elsewhere/requirements.txt\n-r requirements.txt\nevil==1.0\n").unwrap();
+        std::fs::write(d.join("requirements-ci.txt"), "-r elsewhere/requirements.txt\n-r requirements.txt\n-r requirements-link.txt\n-r requirements-hidden.txt\nevil==1.0\n").unwrap();
+        // a symlinked or gitignored include is not scanned on its own, so it can't hide anything
+        std::fs::write(d.join(".gitignore"), "requirements-hidden.txt\n").unwrap();
+        std::fs::write(d.join("requirements-hidden.txt"), "hidden==1.0\n").unwrap();
+        std::os::unix::fs::symlink(d.join("elsewhere/requirements.txt"), d.join("requirements-link.txt")).unwrap();
         let pkg = |name: &str, inferred: bool| ScannedPackage {
             ecosystem: "PyPI".into(),
             name: name.into(),
@@ -372,8 +376,8 @@ mod tests {
         // an include outside this folder can't hide anything, and a malicious package is never dropped
         std::fs::write(d.join("requirements.txt"), "requests==2.31.0\nflask-mal==1.0\n").unwrap();
         assert_eq!(
-            scan("requirements-ci.txt", &["evil", "shady", "requests", "flask-mal"]),
-            own(&[("evil", false), ("shady", false), ("flask-mal", false), ("urllib3", true)])
+            scan("requirements-ci.txt", &["evil", "shady", "hidden", "requests", "flask-mal"]),
+            own(&[("evil", false), ("shady", false), ("hidden", false), ("flask-mal", false), ("urllib3", true)])
         );
     }
 
