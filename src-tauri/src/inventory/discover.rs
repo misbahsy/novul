@@ -88,8 +88,11 @@ pub fn discover(roots: &[PathBuf], exclusions: &[String]) -> Vec<Lockfile> {
             locks
                 .iter()
                 .filter(|l| l.root == r.root)
-                .filter_map(|l| manifest::lock_package_names(&l.path))
-                .any(|installed| pins.keys().all(|n| installed.contains(n)))
+                .filter_map(|l| manifest::lock_packages(&l.path))
+                .any(|installed| {
+                    // an exact pin the lock doesn't match installs another version: scan it
+                    pins.iter().all(|(n, pin)| installed.get(n).is_some_and(|vs| pin.as_ref().is_none_or(|p| vs.contains(p))))
+                })
         })
         .map(|r| r.path.clone())
         .collect();
@@ -157,6 +160,8 @@ mod tests {
         // a mention of evil-pkg outside a [[package]] entry doesn't make it installed
         fs::write(r.join("g/kept/uv.lock"), "# \"evil-pkg\"\n[[package]]\nname = \"pillow\"\nversion = \"12.1.0\"\n").unwrap();
         fs::write(r.join("g/kept/requirements.txt"), "Pillow>=10.0\n").unwrap(); // repeats uv.lock
+        fs::write(r.join("g/kept/requirements-same.txt"), "pillow==12.1.0\n").unwrap(); // same pin as uv.lock
+        fs::write(r.join("g/kept/requirements-old.txt"), "pillow==9.0.0\n").unwrap(); // installs another version
         fs::write(r.join("g/kept/requirements-gpu.txt"), "pillow\nevil-pkg==1.0\n").unwrap(); // not in uv.lock
         fs::write(r.join("g/kept/requirements-git.txt"), "pillow\n-e git+https://example.com/x.git#egg=x\n").unwrap();
         fs::write(r.join("g/kept/requirements-inc.txt"), "pillow\n-r ../other.txt\n").unwrap();
@@ -176,6 +181,7 @@ mod tests {
                 "g/kept/requirements-git.txt",
                 "g/kept/requirements-gpu.txt",
                 "g/kept/requirements-inc.txt",
+                "g/kept/requirements-old.txt",
                 "g/kept/uv.lock"
             ]
         );
@@ -185,7 +191,7 @@ mod tests {
         assert_eq!(found[1].manifest, Some(r.join("d/requirements-dev.txt")));
         assert_eq!(found[2].manifest, Some(r.join("e/go.mod")));
         assert_eq!(found[3].manifest, None);
-        assert_eq!(found[8].manifest, Some(r.join("g/kept/pyproject.toml")));
+        assert_eq!(found[9].manifest, Some(r.join("g/kept/pyproject.toml")));
     }
 
     #[test]

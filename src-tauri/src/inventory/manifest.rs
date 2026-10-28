@@ -33,7 +33,10 @@ fn requirement_name(line: &str) -> Option<&str> {
         return None;
     }
     let end = line.find(|c: char| !(c.is_ascii_alphanumeric() || matches!(c, '-' | '_' | '.'))).unwrap_or(line.len());
-    Some(&line[..end])
+    let name = &line[..end];
+    // `file:x.whl` or `git+ssh:...` is a URL; `x-1.0-py3-none-any.whl` is a local archive pip installs
+    let archive = [".whl", ".zip", ".tar.gz", ".tgz", ".tar.bz2"].iter().any(|e| name.to_ascii_lowercase().ends_with(e));
+    (!line[end..].starts_with(':') && !archive).then_some(name)
 }
 
 fn table_keys(v: Option<&serde_json::Value>, out: &mut Vec<String>) {
@@ -81,9 +84,9 @@ fn composer_json(text: &str) -> Option<Vec<String>> {
     Some(out)
 }
 
-/// A requirements file's own lines: PEP 503 name -> pinned to one exact version (`==x` or `===x`,
-/// no wildcard), and the files it includes with `-r`.
-pub fn requirement_pins(text: &str) -> (HashMap<String, bool>, Vec<String>) {
+/// A requirements file's own lines: PEP 503 name -> the exact version it is pinned to (`==x` or
+/// `===x`, no wildcard), or None for a range, and the files it includes with `-r`.
+pub fn requirement_pins(text: &str) -> (HashMap<String, Option<String>>, Vec<String>) {
     let mut pins = HashMap::new();
     let mut includes = Vec::new();
     for line in text.lines() {
@@ -101,7 +104,7 @@ pub fn requirement_pins(text: &str) -> (HashMap<String, bool>, Vec<String>) {
             spec = spec.split_once(']').map_or("", |(_, s)| s.trim());
         }
         let exact = spec.starts_with("==") && !spec.contains([',', '*']);
-        pins.insert(normalize_pypi(name), exact);
+        pins.insert(normalize_pypi(name), exact.then(|| spec.trim_start_matches('=').trim().to_string()));
     }
     (pins, includes)
 }
@@ -120,23 +123,35 @@ pub fn requirements_fully_named(text: &str) -> bool {
         .all(|l| requirement_name(l).is_some())
 }
 
-/// PEP 503 names of the packages a uv/poetry/pdm lock (`[[package]]`), pylock.toml
-/// (`[[packages]]`) or Pipfile.lock (`default`/`develop` keys) installs. None when unreadable.
-pub fn lock_package_names(lock: &Path) -> Option<HashSet<String>> {
+/// PEP 503 name -> versions of the packages a uv/poetry/pdm lock (`[[package]]`), pylock.toml
+/// (`[[packages]]`) or Pipfile.lock (`default`/`develop` entries) installs. None when unreadable.
+pub fn lock_packages(lock: &Path) -> Option<HashMap<String, Vec<String>>> {
     let text = std::fs::read_to_string(lock).ok()?;
-    let names: Vec<String> = if lock.file_name().is_some_and(|n| n == "Pipfile.lock") {
+    let entries: Vec<(String, String)> = if lock.file_name().is_some_and(|n| n == "Pipfile.lock") {
         let v: serde_json::Value = serde_json::from_str(&text).ok()?;
-        ["default", "develop"].iter().filter_map(|k| v[*k].as_object()).flat_map(|o| o.keys().cloned()).collect()
+        ["default", "develop"]
+            .iter()
+            .filter_map(|k| v[*k].as_object())
+            .flatten()
+            .map(|(n, p)| (n.clone(), p["version"].as_str().unwrap_or("").trim_start_matches('=').to_string()))
+            .collect()
     } else {
         let v = parse_toml(&text)?;
         ["package", "packages"]
             .iter()
             .filter_map(|k| v.get(*k).and_then(|p| p.as_array()))
             .flatten()
-            .filter_map(|p| p.get("name").and_then(|n| n.as_str()).map(String::from))
+            .filter_map(|p| {
+                let name = p.get("name")?.as_str()?;
+                Some((name.to_string(), p.get("version").and_then(|v| v.as_str()).unwrap_or("").to_string()))
+            })
             .collect()
     };
-    Some(names.iter().map(|n| normalize_pypi(n)).collect())
+    let mut out: HashMap<String, Vec<String>> = HashMap::new();
+    for (n, v) in entries {
+        out.entry(normalize_pypi(&n)).or_default().push(v);
+    }
+    Some(out)
 }
 
 fn requirements_txt(text: &str) -> Vec<String> {
@@ -277,6 +292,9 @@ mod tests {
         assert!(!requirements_fully_named("pillow\n-e git+https://example.com/x.git#egg=x\n"));
         assert!(!requirements_fully_named("pillow\nhttps://example.com/x-1.0.whl\n"));
         assert!(!requirements_fully_named("pillow\n-r other.txt\n"));
+        assert!(!requirements_fully_named("pillow\nfile:vendor/evil-1.0.tar.gz\n"));
+        assert!(!requirements_fully_named("pillow\nevil-1.0-py3-none-any.whl\n"));
+        assert!(requirements_fully_named("pillow @ https://example.com/pillow.whl\n"), "a named URL still names its package");
     }
 
     #[test]
@@ -284,10 +302,11 @@ mod tests {
         let dir = tempfile::tempdir().unwrap();
         let uv = dir.path().join("uv.lock");
         std::fs::write(&uv, "# \"evil\"\n[[package]]\nname = \"Pillow\"\nversion = \"12.1.0\"\n[package.metadata]\nrequires-dist = [{ name = \"evil\" }]\n").unwrap();
-        assert_eq!(lock_package_names(&uv).unwrap(), HashSet::from(["pillow".to_string()]));
+        assert_eq!(lock_packages(&uv).unwrap(), HashMap::from([("pillow".to_string(), vec!["12.1.0".to_string()])]));
         let pipfile = dir.path().join("Pipfile.lock");
-        std::fs::write(&pipfile, r#"{"_meta":{"evil":1},"default":{"requests":{}},"develop":{"Py_Test":{}}}"#).unwrap();
-        assert_eq!(lock_package_names(&pipfile).unwrap(), HashSet::from(["requests".to_string(), "py-test".to_string()]));
+        std::fs::write(&pipfile, r#"{"_meta":{"evil":1},"default":{"requests":{"version":"==2.31.0"}},"develop":{"Py_Test":{}}}"#).unwrap();
+        let p = lock_packages(&pipfile).unwrap();
+        assert_eq!((p.len(), p["requests"][0].as_str(), p["py-test"][0].as_str()), (2, "2.31.0", ""));
     }
 
     #[test]

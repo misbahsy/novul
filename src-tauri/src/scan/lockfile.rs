@@ -130,8 +130,8 @@ fn refine_requirements(scan: &mut LockfileScan) {
         }
         let name = normalize_pypi(&p.name);
         match own.get(&name) {
-            Some(&exact) => {
-                p.inferred = !exact;
+            Some(pin) => {
+                p.inferred = pin.is_none();
                 true
             }
             None => !included.contains(&name) || p.vulns.iter().any(|v| v.malicious),
