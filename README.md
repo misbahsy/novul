@@ -11,15 +11,13 @@ NoVul is a menu bar app for your Mac. It finds the security problems in the soft
   <a href="LICENSE"><img alt="License: Apache 2.0" src="https://img.shields.io/badge/license-Apache_2.0-555"></a>
 </p>
 
-NoVul finds the code projects on your Mac. It compares each package in their lockfiles with public
-vulnerability data. It also examines your Homebrew packages, language runtimes, global packages and AI
-coding tools. It also finds API keys in plain-text files.
-
-NoVul does a new check at 30-minute intervals, and each time that a lockfile changes. It sends a
-notification only for important problems.
-
-All the checks run on your Mac. NoVul does not send your code or your keys to a different computer.
-Refer to [Privacy](#privacy).
+- **Your projects.** Checks each package in your lockfiles against public vulnerability data.
+- **This Mac.** Checks Homebrew packages, language runtimes, global packages and AI coding tools.
+- **Exposed secrets.** Finds API keys in plain-text files.
+- **Fix plan.** Shows what to fix first, with the command that fixes it.
+- **Always current.** Checks again every 30 minutes and when a lockfile changes. Notifies you only
+  about important problems.
+- **Private.** Your code, files and keys stay on your Mac. Refer to [Privacy](#privacy).
 
 ![NoVul: a radar of open issues by project and severity, next to a fix plan ranked by what to fix first](docs/screenshots/main.webp)
 
@@ -141,10 +139,10 @@ The lists are:
 
 To find the vulnerabilities in your packages, NoVul has two modes:
 
-| Mode | Data that NoVul sends | Result |
+| Mode | How NoVul checks your packages | Result |
 |---|---|---|
-| **Standard** (default) | The names and versions of your packages go to [OSV.dev](https://osv.dev). This includes your Homebrew packages and the versions of your AI tools. For `requirements.txt` projects, the names and versions also go to [deps.dev](https://deps.dev). | NoVul shows a new advisory in 30 minutes or less. |
-| **Private mode** (in Settings) | No data from your projects. NoVul downloads the OSV databases for your languages (approximately 250 MB, one time each day). Then it compares your packages on your Mac. | NoVul shows a new advisory in one day or less. NoVul does not examine Homebrew packages, because `brew vulns` must be online. |
+| **Standard** (default) | Online. NoVul looks up package names and versions in the [OSV.dev](https://osv.dev) database. This includes your Homebrew packages and AI tools. For `requirements.txt` projects, NoVul also uses [deps.dev](https://deps.dev) to find the versions. | NoVul shows a new advisory in 30 minutes or less. |
+| **Private mode** (in Settings) | On your Mac. NoVul downloads the OSV databases for your languages (approximately 250 MB, one time each day) and checks your packages against them. No data about your projects leaves your Mac. | NoVul shows a new advisory in one day or less. NoVul does not check Homebrew packages, because `brew vulns` must be online. |
 
 NoVul does not send your source code, the contents of your files, your file paths or your secrets.
 NoVul keeps the results in a SQLite database on your Mac, in
