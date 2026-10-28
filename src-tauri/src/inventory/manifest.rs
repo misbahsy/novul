@@ -106,6 +106,8 @@ pub fn requirement_pins(text: &str) -> (HashMap<String, Option<String>>, Vec<Str
         if spec.starts_with('[') {
             spec = spec.split_once(']').map_or("", |(_, s)| s.trim());
         }
+        // the old `foo (==1.0)` form
+        spec = spec.strip_prefix('(').and_then(|s| s.strip_suffix(')')).map_or(spec, str::trim);
         let exact = spec.starts_with("==") && !spec.contains([',', '*']);
         pins.insert(normalize_pypi(name), exact.then(|| spec.trim_start_matches('=').trim().to_string()));
     }
@@ -289,6 +291,13 @@ mod tests {
             v.sort();
             v
         })
+    }
+
+    #[test]
+    fn exact_pins_in_every_form() {
+        let (pins, _) = requirement_pins("a==1.0\nb (==2.0)\nc[x] == 3.0 ; python_version>'3'\nd>=1\ne (>=1, <2)\n");
+        let v = |n: &str| pins[n].as_deref();
+        assert_eq!((v("a"), v("b"), v("c"), v("d"), v("e")), (Some("1.0"), Some("2.0"), Some("3.0"), None, None));
     }
 
     #[test]
