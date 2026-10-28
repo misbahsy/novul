@@ -34,9 +34,12 @@ fn requirement_name(line: &str) -> Option<&str> {
     }
     let end = line.find(|c: char| !(c.is_ascii_alphanumeric() || matches!(c, '-' | '_' | '.'))).unwrap_or(line.len());
     let name = &line[..end];
-    // `file:x.whl` or `git+ssh:...` is a URL; `x-1.0-py3-none-any.whl` is a local archive pip installs
-    let archive = [".whl", ".zip", ".tar.gz", ".tgz", ".tar.bz2"].iter().any(|e| name.to_ascii_lowercase().ends_with(e));
-    (!line[end..].starts_with(':') && !archive).then_some(name)
+    // PEP 508: extras, a version, a marker or `@ url` follow the name. Anything else (`file:x`,
+    // `./dir`, `x-1.0-py3-none-any.whl`) is a path or URL pip installs as is.
+    let rest = line[end..].trim_start();
+    let pep508 = rest.is_empty() || rest.starts_with(['[', '(', '=', '<', '>', '!', '~', ';', '@']);
+    let archive = [".whl", ".zip", ".tar.gz", ".tgz", ".tar.bz2", ".tar.xz", ".tar", ".egg"].iter().any(|e| name.to_ascii_lowercase().ends_with(e));
+    (pep508 && !archive).then_some(name)
 }
 
 fn table_keys(v: Option<&serde_json::Value>, out: &mut Vec<String>) {
@@ -115,12 +118,14 @@ const INDEX_OPTIONS: [&str; 9] =
 
 /// Whether every requirement line of a requirements file names a package. Options, includes,
 /// editable and bare-URL lines can install packages that the names don't show.
+/// A package named twice can carry two pins, so such a file never counts as fully named.
 pub fn requirements_fully_named(text: &str) -> bool {
+    let mut seen = HashSet::new();
     text.lines()
         .map(|l| l.split(" #").next().unwrap_or("").trim())
         .filter(|l| !l.is_empty() && !l.starts_with('#'))
         .filter(|l| !INDEX_OPTIONS.iter().any(|o| l.starts_with(o)))
-        .all(|l| requirement_name(l).is_some())
+        .all(|l| requirement_name(l).is_some_and(|n| seen.insert(normalize_pypi(n))))
 }
 
 /// PEP 503 name -> versions of the packages a uv/poetry/pdm lock (`[[package]]`), pylock.toml
@@ -295,6 +300,10 @@ mod tests {
         assert!(!requirements_fully_named("pillow\nfile:vendor/evil-1.0.tar.gz\n"));
         assert!(!requirements_fully_named("pillow\nevil-1.0-py3-none-any.whl\n"));
         assert!(requirements_fully_named("pillow @ https://example.com/pillow.whl\n"), "a named URL still names its package");
+        assert!(requirements_fully_named("requests[socks] >= 2.0\nfoo (>=1.0)\n"));
+        assert!(!requirements_fully_named("pillow\nvendor/evil\n"));
+        assert!(!requirements_fully_named("pillow\nevil.tar.xz\n"));
+        assert!(!requirements_fully_named("pillow>=10\nPillow==9.0.0\n"), "named twice");
     }
 
     #[test]
