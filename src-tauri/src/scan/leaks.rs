@@ -356,7 +356,7 @@ async fn scan(
             .filter(|f| f.kind == "secret")
             .filter(|f| {
                 let p = Path::new(&f.project_path);
-                failed_home.contains(p) || !home_paths.contains(p) && kept.iter().any(|d| p.starts_with(d))
+                p.exists() && (failed_home.contains(p) || !home_paths.contains(p) && kept.iter().any(|d| p.starts_with(d)))
             })
             .map(as_input),
     );

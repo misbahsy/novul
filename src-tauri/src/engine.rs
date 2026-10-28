@@ -481,6 +481,7 @@ impl Job<'_> {
     pub async fn rescan_pass(&self, paths: Vec<String>) {
         let mut errors = vec![];
         let lockfiles = self.lockfiles_for(&paths).await;
+        let _ = self.store.resolve_deleted_secrets(now());
         self.scan_batches(lockfiles, false, &mut errors).await;
         self.finish(errors);
     }

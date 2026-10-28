@@ -392,10 +392,26 @@ fn absolute(p: &str) -> PathBuf {
 }
 
 /// Lockfile paths for files and directories (directories are searched like the app does).
-pub fn resolve_lockfiles(args: &[String]) -> Result<Vec<String>, String> {
+/// Lockfiles NoVul has scanned before, and files with an open secret finding.
+fn known_lockfiles(db: &Path) -> Vec<String> {
+    let Ok(conn) = open_ro(db) else { return vec![] };
+    let sql = "SELECT lockfile_path FROM project UNION SELECT project_path FROM finding WHERE kind='secret' AND resolved_at IS NULL";
+    let Ok(mut stmt) = conn.prepare(sql) else { return vec![] };
+    stmt.query_map([], |r| r.get(0)).map(|rows| rows.flatten().collect()).unwrap_or_default()
+}
+
+/// The lockfiles to rescan for each argument: the file itself, or every lockfile in a folder.
+/// Known paths under it that no longer exist are included too, so the worker drops them and
+/// resolves their findings (secrets as well), also when the whole folder was deleted.
+pub fn resolve_lockfiles(args: &[String], known: &[String]) -> Result<Vec<String>, String> {
     let mut out = vec![];
     for a in args {
         let p = absolute(a);
+        let gone: Vec<String> = known
+            .iter()
+            .filter(|k| !Path::new(k).exists() && path_forms(a).iter().any(|d| *k == d || k.starts_with(&format!("{d}/"))))
+            .cloned()
+            .collect();
         if p.is_file() {
             if ecosystem_for(&p.file_name().unwrap_or_default().to_string_lossy()).is_none() {
                 return Err(format!("{a} is not a lockfile NoVul knows"));
@@ -403,7 +419,7 @@ pub fn resolve_lockfiles(args: &[String]) -> Result<Vec<String>, String> {
             out.push(p.to_string_lossy().into_owned());
         } else if p.is_dir() {
             let found = discover(&[p], &Settings::default().exclusions);
-            if found.is_empty() {
+            if found.is_empty() && gone.is_empty() {
                 return Err(format!("no lockfiles found in {a}"));
             }
             out.extend(
@@ -411,6 +427,9 @@ pub fn resolve_lockfiles(args: &[String]) -> Result<Vec<String>, String> {
                     .into_iter()
                     .map(|l| l.path.to_string_lossy().into_owned()),
             );
+            out.extend(gone);
+        } else if !gone.is_empty() {
+            out.extend(gone);
         } else {
             return Err(format!("{a} does not exist"));
         }
@@ -426,7 +445,7 @@ pub fn rescan(db: &Path, args: &[String]) -> Result<(Vec<String>, Option<String>
     if !db.exists() {
         return Err(MISSING_DB.into());
     }
-    let lockfiles = resolve_lockfiles(args)?;
+    let lockfiles = resolve_lockfiles(args, &known_lockfiles(db))?;
     let exe = std::env::current_exe().map_err(|e| e.to_string())?;
     let status = std::process::Command::new(exe)
         .args(["--worker", "rescan", "--db"])
@@ -825,6 +844,22 @@ pub mod tests {
             .id;
         s.set_muted(id, true).unwrap();
         (dir, db)
+    }
+
+    #[test]
+    fn rescanning_a_deleted_folder_includes_its_known_lockfiles() {
+        let tmp = tempfile::tempdir().unwrap();
+        let live = tmp.path().join("live");
+        std::fs::create_dir_all(&live).unwrap();
+        std::fs::write(live.join("package-lock.json"), "{}").unwrap();
+        let s = |p: &Path| p.to_string_lossy().into_owned();
+        let known = [s(&live.join("package-lock.json")), s(&live.join("sub/uv.lock")), s(&tmp.path().join("gone/a/uv.lock")), s(&tmp.path().join("gone-not/uv.lock"))];
+
+        // the whole folder is deleted: its known lockfiles go to the worker, which removes them
+        assert_eq!(resolve_lockfiles(&[s(&tmp.path().join("gone"))], &known).unwrap(), [known[2].clone()]);
+        // a deleted subproject inside a folder that still exists
+        assert_eq!(resolve_lockfiles(&[s(&live)], &known).unwrap(), [known[0].clone(), known[1].clone()]);
+        assert!(resolve_lockfiles(&[s(&tmp.path().join("never"))], &known).unwrap_err().contains("does not exist"));
     }
 
     #[test]

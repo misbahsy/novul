@@ -385,6 +385,19 @@ impl Store {
         tx.commit()
     }
 
+    /// Resolve secret findings whose file is gone (deleted, or its folder was).
+    pub fn resolve_deleted_secrets(&self, now: i64) -> R<()> {
+        let mut conn = self.db();
+        let tx = conn.transaction()?;
+        let gone: Vec<i64> = {
+            let mut stmt = tx.prepare("SELECT id, project_path FROM finding WHERE kind='secret' AND resolved_at IS NULL")?;
+            let rows = stmt.query_map([], |r| Ok((r.get::<_, i64>(0)?, r.get::<_, String>(1)?)))?;
+            rows.flatten().filter(|(_, p)| !Path::new(p).exists()).map(|(id, _)| id).collect()
+        };
+        Self::resolve(&tx, gone.into_iter(), now)?;
+        tx.commit()
+    }
+
     /// Findings of a non-lockfile kind ('brew' | 'runtime'): upsert, resolve the rest of that kind.
     pub fn sync_kind(&self, kind: &str, findings: &[FindingInput], now: i64) -> R<()> {
         let mut conn = self.db();
@@ -816,6 +829,20 @@ mod tests {
         // reappearing clears resolved_at and keeps the identity
         write(&s, "a", &[input("a", "lodash", "4.17.20", "CVE-1")], 300);
         assert_eq!(s.open_findings().unwrap().len(), 2);
+    }
+
+    #[test]
+    fn secrets_in_deleted_files_are_resolved() {
+        let (d, s) = store();
+        let kept = d.path().join("app/.env");
+        std::fs::create_dir_all(kept.parent().unwrap()).unwrap();
+        std::fs::write(&kept, "").unwrap();
+        let secret = |path: &Path| FindingInput { kind: "secret", project_path: path.to_string_lossy().into_owned(), ..input("a", "AWS key", "x", "SECRET-aws") };
+        s.sync_kind("secret", &[secret(&kept), secret(&d.path().join("deleted/.env"))], 100).unwrap();
+        s.resolve_deleted_secrets(200).unwrap();
+        let open = s.open_findings().unwrap();
+        assert_eq!(open.len(), 1);
+        assert_eq!(open[0].project_path, kept.to_string_lossy());
     }
 
     #[test]
