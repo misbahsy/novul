@@ -44,29 +44,27 @@ NoVul is a menu bar app for your Mac. It finds the security problems in the soft
 
 ## What it checks
 
-- **Project packages.** NoVul reads the lockfiles of npm, pnpm, Yarn, Bun, uv, Poetry, Pipenv, PDM,
-  `requirements*.txt`, Composer, Go, Cargo, Bundler, Dart/Flutter and Mix. It compares each package
-  with the data from [OSV.dev](https://osv.dev).
-- **Homebrew packages.**
-- **Global packages.** These are npm, pnpm and Bun global packages, pipx and uv tools,
-  `cargo install` packages, Go binaries and Ruby gems.
-- **Runtimes.** These are Node, Python, PHP, Go, Ruby and Java. NoVul also finds runtime versions
-  that do not get security updates (end of life).
-- **AI coding tools.** These are Claude Code, Codex and Ollama, and the runtimes in them.
-- **Exposed secrets.** NoVul uses [gitleaks](https://github.com/gitleaks/gitleaks) to find API keys
-  and tokens in your project folders and in usual configuration files. NoVul does not keep or show
-  the key. It shows the location of the key and how to move the key to a safe location. A key for a
-  service with a recent public data breach gets a higher priority.
+| Area | Details |
+|---|---|
+| Project packages | Lockfiles of npm, pnpm, Yarn, Bun, uv, Poetry, Pipenv, PDM, `requirements*.txt`, Composer, Go, Cargo, Bundler, Dart/Flutter and Mix. If a Python project has a `.venv` and no lockfile, NoVul reads the installed versions from the venv. |
+| Homebrew | Installed formulae, with `brew vulns`. |
+| Global packages | npm, pnpm and Bun globals, pipx and uv tools, `cargo install` packages, Go binaries and Ruby gems. |
+| Runtimes | Node, Python, PHP, Go, Ruby and Java, including versions past end of life. |
+| AI and developer tools | Claude Code, Codex, OpenCode, pi, Ollama and Bun, and the runtimes bundled in them. |
+| Exposed secrets | API keys and tokens in project folders and common configuration files, found with [gitleaks](https://github.com/gitleaks/gitleaks). NoVul shows where a key is and how to move it, never the key. |
 
-NoVul puts the problems in this sequence:
+Vulnerability data comes from [OSV.dev](https://osv.dev), the GitHub advisories and
+[endoflife.date](https://endoflife.date).
+
+## How it ranks problems
 
 1. **Malicious** packages.
 2. Vulnerabilities that attackers **actively exploit**, from the
    [CISA KEV](https://www.cisa.gov/known-exploited-vulnerabilities-catalog) list.
-3. All other vulnerabilities, from the highest severity to the lowest. If two vulnerabilities have
-   the same severity, the vulnerability with the higher [EPSS](https://www.first.org/epss) score is first.
+3. All other vulnerabilities, from the highest severity to the lowest. If two have the same
+   severity, the one with the higher [EPSS](https://www.first.org/epss) score is first.
 
-For each problem, NoVul gives the command that repairs it with the package manager of that project.
+A key for a service with a recent public data breach gets a higher priority.
 
 ## Install
 
